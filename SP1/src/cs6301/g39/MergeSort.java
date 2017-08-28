@@ -1,11 +1,8 @@
-/** Timer class for roughly calculating running time of programs
+/** MergeSort class which implements mergesort on an integer array as well as generic arrays
  *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
  *  Ver 1.0: 2017/08/26
- *  Usage:  Timer timer = new Timer();
- *          timer.start();
- *          timer.end();
- *          System.out.println(timer);  // output statistics
- *  Corrected memory calculations to 1048576 instead of 1000000
+ *  Usage:  MergeSort.mergeSort(int[] arr, int[] tmp)
+ *  		MergeSort.mergeSort(T[] arr, T[] tmp)
  */
 package cs6301.g39;
 
@@ -86,7 +83,4 @@ public class MergeSort {
 			}
 		}
 	
-	static<T extends Comparable<? super T>> void nSquareSort(T[] arr) {
-		
-	}
 }
