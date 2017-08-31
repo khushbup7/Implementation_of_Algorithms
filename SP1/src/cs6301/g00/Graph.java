@@ -1,5 +1,3 @@
-package cs6301.g00;
-
 /**
  * Class to represent a graph
  *  @author rbk
@@ -7,6 +5,7 @@ package cs6301.g00;
  *
  */
 
+package cs6301.g00;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,8 +23,7 @@ public class Graph implements Iterable<Graph.Vertex> {
 
     public static class Vertex implements Iterable<Edge> {
 	int name; // name of the vertex
-	
-	public List<Edge> adj, revAdj; // adjacency list; use LinkedList or ArrayList
+	List<Edge> adj, revAdj; // adjacency list; use LinkedList or ArrayList
 
 	/**
 	 * Constructor for the vertex
@@ -34,9 +32,8 @@ public class Graph implements Iterable<Graph.Vertex> {
 	 *            : int - name of the vertex
 	 */
 	Vertex(int n) {
-	    
-		name = n;
-		adj = new LinkedList<Edge>();
+	    name = n;
+	    adj = new LinkedList<Edge>();
 	    revAdj = new LinkedList<Edge>();   /* only for directed graphs */
 	}
 
