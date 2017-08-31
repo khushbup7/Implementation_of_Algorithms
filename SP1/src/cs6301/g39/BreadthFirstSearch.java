@@ -10,6 +10,7 @@
 package cs6301.g39;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -42,11 +43,14 @@ public class BreadthFirstSearch {
 			n1[1][tmp1.getName()] = 1; //
 			
 			//TODO adj is made public by us. Verify it with professor before submitting
-			while(!tmp1.adj.isEmpty()) {
-				Graph.Edge e1 = tmp1.adj.remove(0);
+			Iterator<Graph.Edge> it = tmp1.iterator(); 
+			while(it.hasNext()) {
+				Graph.Edge e1 = it.next();
 				
 				if(n1[0][e1.otherEnd(tmp1).getName()] == 0)
 					bfsQueue.add(e1.otherEnd(tmp1));
+				
+				it.remove();
 			}
 		}
 		
