@@ -42,7 +42,6 @@ public class BreadthFirstSearch {
 			n1[0][tmp1.getName()] = 1;
 			n1[1][tmp1.getName()] = 1; //
 			
-			//TODO adj is made public by us. Verify it with professor before submitting
 			Iterator<Graph.Edge> it = tmp1.iterator(); 
 			while(it.hasNext()) {
 				Graph.Edge e1 = it.next();
