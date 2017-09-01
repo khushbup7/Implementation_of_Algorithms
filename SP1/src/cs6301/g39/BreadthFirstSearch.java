@@ -10,6 +10,7 @@
 package cs6301.g39;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -26,36 +27,56 @@ public class BreadthFirstSearch {
 	 * @param n Number of vertices in a graph
 	 * @return
 	 */
-	public static ArrayList<Graph.Vertex> BFS(Graph G, Graph.Vertex s, int n){
+	public static LinkedList<Graph.Vertex> BFS(Graph g, Graph.Vertex s){
 
 		ArrayList<Graph.Vertex> ret = new ArrayList<Graph.Vertex>();
+		int n = g.size();
 		
-		int[][] n1 = new int[2][n];
+		boolean[] marked = new boolean[n];
+		int[] distance = new int[n];
+		Arrays.fill(distance, -1);
 		
 		Queue<Graph.Vertex> bfsQueue = new LinkedList<Graph.Vertex>(); 
 		
 		bfsQueue.add(s);
+		distance[s.getName()] = 0;
 		
 		while(!bfsQueue.isEmpty()) {
 			
 			Graph.Vertex tmp1 = bfsQueue.remove();
-			n1[0][tmp1.getName()] = 1;
-			n1[1][tmp1.getName()] = 1; //
+			marked[tmp1.getName()] = true;
 			
 			Iterator<Graph.Edge> it = tmp1.iterator(); 
 			while(it.hasNext()) {
+				
 				Graph.Edge e1 = it.next();
 				
-				if(n1[0][e1.otherEnd(tmp1).getName()] == 0)
+				if(marked[e1.otherEnd(tmp1).getName()] == false) {
 					bfsQueue.add(e1.otherEnd(tmp1));
-				
+					distance[e1.otherEnd(tmp1).getName()] = distance[tmp1.getName()] + 1;
+				}
 				it.remove();
 			}
 		}
 		
+		int maxDistance = 0;
+		int maxNodeIndex = 0;
+		for(int i = 0; i < n; i++) {
+			if(distance[i] > maxDistance) {
+				maxDistance = distance[i];
+				maxNodeIndex = i;
+			}
+		}
+			
 		ret.add(s);
+		ret.add(g.getVertex(maxNodeIndex));
 		
-		return ret;
-		
+		return longestPath(ret);
 	}
+	
+	private static LinkedList<Graph.Vertex> longestPath(ArrayList<Graph.Vertex> list1) {
+		
+		return null;
+	}
+	
 }
