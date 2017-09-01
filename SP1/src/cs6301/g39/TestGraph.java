@@ -16,6 +16,9 @@ public class TestGraph {
 		g.addEdge(g.getVertex(4), g.getVertex(8), 1);
 		g.addEdge(g.getVertex(4), g.getVertex(9), 1);
 		g.addEdge(g.getVertex(8), g.getVertex(10), 1);
+		
+		Diameter.diameter(g);
+		
 		System.out.println();
 	}
 	

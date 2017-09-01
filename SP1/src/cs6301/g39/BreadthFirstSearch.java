@@ -34,12 +34,15 @@ public class BreadthFirstSearch {
 		
 		boolean[] marked = new boolean[n];
 		int[] distance = new int[n];
+		int[] predecessor = new int[n];
 		Arrays.fill(distance, -1);
+		Arrays.fill(predecessor, -1);
 		
 		Queue<Graph.Vertex> bfsQueue = new LinkedList<Graph.Vertex>(); 
 		
 		bfsQueue.add(s);
 		distance[s.getName()] = 0;
+		predecessor[s.getName()] = 0;
 		
 		while(!bfsQueue.isEmpty()) {
 			
@@ -54,6 +57,7 @@ public class BreadthFirstSearch {
 				if(marked[e1.otherEnd(tmp1).getName()] == false) {
 					bfsQueue.add(e1.otherEnd(tmp1));
 					distance[e1.otherEnd(tmp1).getName()] = distance[tmp1.getName()] + 1;
+					predecessor[e1.otherEnd(tmp1).getName()] = tmp1.getName() ;
 				}
 				it.remove();
 			}
@@ -71,12 +75,23 @@ public class BreadthFirstSearch {
 		ret.add(s);
 		ret.add(g.getVertex(maxNodeIndex));
 		
-		return longestPath(ret);
+		return longestPath(ret, predecessor, g);
 	}
 	
-	private static LinkedList<Graph.Vertex> longestPath(ArrayList<Graph.Vertex> list1) {
+	private static LinkedList<Graph.Vertex> longestPath(ArrayList<Graph.Vertex> list1, int[] pred, Graph g) {
 		
-		return null;
+		LinkedList<Graph.Vertex> lp = new LinkedList<Graph.Vertex>();
+		
+		Graph.Vertex source = list1.get(0);
+		Graph.Vertex destination = list1.get(1);
+		
+		int tmp = destination.getName();
+		while(tmp != source.getName()){
+			lp.addFirst(g.getVertex(tmp));
+			tmp = pred[tmp];
+		}
+		lp.addFirst(source);
+		return lp;
 	}
 	
 }
