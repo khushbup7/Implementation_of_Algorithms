@@ -10,9 +10,12 @@ public class Diameter {
 	
 	public static LinkedList<Graph.Vertex> diameter(Graph g) {
 		
-		Graph.Vertex v1 = g.getVertex(0);
+		Graph.Vertex v1 = g.getVertex(1);
 		LinkedList<Graph.Vertex> bfs1 = BreadthFirstSearch.BFS(g,v1);
-		return null;
+		
+		LinkedList<Graph.Vertex> bfs2 = BreadthFirstSearch.BFS(g,bfs1.getLast());
+		
+		return bfs2;
 	}
 
 }
