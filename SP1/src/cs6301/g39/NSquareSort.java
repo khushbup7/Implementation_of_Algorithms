@@ -1,3 +1,9 @@
+/** NSquareSort class implements insertion sort on generic arrays
+ *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ *  Ver 1.0: 2017/08/28
+ *  Usage:  NSquareSort.nSquareSort(int[] arr)
+ */
+
 package cs6301.g39;
 
 public class NSquareSort {
