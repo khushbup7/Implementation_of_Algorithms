@@ -59,7 +59,6 @@ public class BreadthFirstSearch {
 					distance[e1.otherEnd(tmp1).getName()] = distance[tmp1.getName()] + 1;
 					predecessor[e1.otherEnd(tmp1).getName()] = tmp1.getName() ;
 				}
-				it.remove();
 			}
 		}
 		
@@ -73,7 +72,7 @@ public class BreadthFirstSearch {
 		}
 			
 		ret.add(s);
-		ret.add(g.getVertex(maxNodeIndex));
+		ret.add(g.getVertex(maxNodeIndex+1));
 		
 		return longestPath(ret, predecessor, g);
 	}
@@ -87,7 +86,7 @@ public class BreadthFirstSearch {
 		
 		int tmp = destination.getName();
 		while(tmp != source.getName()){
-			lp.addFirst(g.getVertex(tmp));
+			lp.addFirst(g.getVertex(tmp+1));
 			tmp = pred[tmp];
 		}
 		lp.addFirst(source);

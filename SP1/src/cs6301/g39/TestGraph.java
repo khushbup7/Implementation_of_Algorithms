@@ -1,5 +1,7 @@
 package cs6301.g39;
 
+import java.util.LinkedList;
+
 import cs6301.g00.Graph;
 
 public class TestGraph {
@@ -17,10 +19,16 @@ public class TestGraph {
 		g.addEdge(g.getVertex(4), g.getVertex(9), 1);
 		g.addEdge(g.getVertex(8), g.getVertex(10), 1);
 		
-		Diameter.diameter(g);
+		LinkedList<Graph.Vertex> l1 = Diameter.diameter(g);
 		
-		System.out.println();
+		
+		for(int i = 0; i<l1.size();i++) {
+			System.out.println(l1.get(i).toString());
+		}
 	}
+		
+		
+		
 	
 	
 }
