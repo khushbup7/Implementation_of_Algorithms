@@ -1,7 +1,12 @@
 package cs6301.g39;
 
 import java.util.LinkedList;
-
+/** 
+ * TestGraph class to test diameter and BreadthFirstSearch
+ * 
+ *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ *  Ver 1.2: 2017/09/02
+ */
 import cs6301.g00.Graph;
 
 public class TestGraph {
@@ -21,10 +26,12 @@ public class TestGraph {
 		
 		LinkedList<Graph.Vertex> l1 = Diameter.diameter(g);
 		
-		
-		for(int i = 0; i<l1.size();i++) {
-			System.out.println(l1.get(i).toString());
+		System.out.println("The diameter of a given graph is:" + l1.size());
+		System.out.println("The longest path along the diameter is:");
+		for(int i = 0; i<l1.size()-1;i++) {
+			System.out.print(l1.get(i).toString() + " -> ");
 		}
+		System.out.println(l1.get(l1.size()-1).toString());
 	}
 		
 		
