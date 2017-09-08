@@ -13,7 +13,7 @@ import cs6301.g00.Timer;
 public class TestSort {
 	public static void main(String[] args) {
 		// n = array size
-		int n = 1000000;
+		int n = 20000;
 
 		int[] arint = new int[n];
 		for (int i = 0; i < n; i++) {
