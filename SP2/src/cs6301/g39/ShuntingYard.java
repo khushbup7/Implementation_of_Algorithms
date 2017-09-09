@@ -29,19 +29,21 @@ public class ShuntingYard {
 		Stack<Token<?>> oprStack = new Stack<Token<?>>();
 		
 		for(int i = 0; i<l1.size(); i++) {
-			Token<?> t = l1.get(i);
+			
+			Token<?> token = l1.get(i);
+			String tokenStr = token.toString(); 
 			//if the token is an operand
-			if(!t.isOperator) {
-				outputQueue.add(t);
+			if(!token.isOperator) {
+				outputQueue.add(token);
 			}
 			
 			//if the token is "("
-			else if(t.toString().equals("(")){
-				oprStack.push(t);
+			else if(tokenStr.equals("(")){
+				oprStack.push(token);
 			}
 			
 			//if the token is ")"
-			else if(t.toString().equals(")")) {
+			else if(tokenStr.equals(")")) {
 				if(!oprStack.isEmpty()) {
 					while(!oprStack.peek().toString().equals("(")) {
 						outputQueue.add(oprStack.pop());
@@ -53,12 +55,12 @@ public class ShuntingYard {
 			//if the token is any other operator
 			else {
 				while(!oprStack.isEmpty()){
-					if(precisionTable.get(oprStack.peek().toString()) >= precisionTable.get(t.toString()) && !t.toString().equals("^"))
+					if(precisionTable.get(oprStack.peek().toString()) >= precisionTable.get(tokenStr) && !token.toString().equals("^"))
 						outputQueue.add(oprStack.pop());
 					else
 						break;
 				}
-				oprStack.push(t);
+				oprStack.push(token);
 			}
 		}
 		
