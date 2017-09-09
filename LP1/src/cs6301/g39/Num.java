@@ -15,7 +15,9 @@ public class Num  implements Comparable<Num> {
 
     /* Start of Level 1 */
     Num(String s) {
-    	//for(int i = )
+    	for(int i = 0; i < s.length(); i++) {
+    		value.addFirst(new Long(s.charAt(i)));
+    	}
     }
 
     Num(long x) {
@@ -78,7 +80,12 @@ public class Num  implements Comparable<Num> {
     
     // Return number to a string in base 10
     public String toString() {
-	return null;
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(Long l : value)
+    		sb.append(l.toString());
+    		
+    	return sb.toString();
     }
 
     public long base() { return base; }
