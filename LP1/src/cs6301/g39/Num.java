@@ -11,7 +11,7 @@ public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // This can be changed to what you want it to be.
     long base = defaultBase;  // Change as needed
-    LinkedList<Integer> value = new LinkedList<Integer>();
+    LinkedList<Long> value = new LinkedList<Long>();
 
     /* Start of Level 1 */
     Num(String s) {
@@ -19,6 +19,10 @@ public class Num  implements Comparable<Num> {
     }
 
     Num(long x) {
+    	while(x > 0) {
+    		value.add(x%base);
+    		x = x / base;
+    	}
     }
 
     static Num add(Num a, Num b) {
