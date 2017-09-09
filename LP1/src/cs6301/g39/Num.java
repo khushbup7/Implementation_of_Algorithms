@@ -11,11 +11,13 @@ public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // This can be changed to what you want it to be.
     long base = defaultBase;  // Change as needed
-    LinkedList<Integer> value = new LinkedList<Integer>();
+    LinkedList<Long> value = new LinkedList<Long>();
 
     /* Start of Level 1 */
     Num(String s) {
-    	//for(int i = )
+    	for(int i = 0; i < s.length(); i++) {
+    		value.addFirst(new Long(s.charAt(i)));
+    	}
     }
 
     Num(long x) {
@@ -74,7 +76,12 @@ public class Num  implements Comparable<Num> {
     
     // Return number to a string in base 10
     public String toString() {
-	return null;
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(Long l : value)
+    		sb.append(l.toString());
+    		
+    	return sb.toString();
     }
 
     public long base() { return base; }
