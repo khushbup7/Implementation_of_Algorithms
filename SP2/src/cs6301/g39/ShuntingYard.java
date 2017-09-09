@@ -1,3 +1,10 @@
+/** ShuntingYard class for implementing Shunting Yard algorithm.
+ *  This algorithm returns a post-fix expression equivalent to given in-fix expression.
+ *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ *  Ver 1.0: 2017/09/08 
+ *  Usage: ShuntingYard.shuntingYardParser(List<Token<?>> l1)
+ */
+
 package cs6301.g39;
 
 import java.util.HashMap;
@@ -7,55 +14,64 @@ import java.util.Map;
 import java.util.Stack;
 
 public class ShuntingYard {
-	
-	    static Map<String,Integer> precisionTable = new HashMap<String,Integer>(){/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+
+	// a hashmap storing the precedence values of operators
+	static Map<String, Integer> precedenceTable = new HashMap<String, Integer>() {
+		/**
+		* 
+		*/
+		private static final long serialVersionUID = 1L;
 		{
-		put("(", 0);
-		put("+", 1);
-		put("-", 1);
-		put("*", 2);
-		put("/", 2);
-		put("^", 3);
-		put("!", 4);
-	}};
-	
+			put("(", 0);
+			put("+", 1);
+			put("-", 1);
+			put("*", 2);
+			put("/", 2);
+			put("^", 3);
+			put("!", 4);
+		}
+	};
+
+	/**
+	 * @param l1
+	 *            - list of tokens from tokenizer
+	 * @return - an equivalent post-fix expression
+	 */
 	public static String shuntingYardParser(List<Token<?>> l1) {
-		
-		LinkedList<Token<?>> outputQueue = new LinkedList<Token<?>>();
-		
-		Stack<Token<?>> oprStack = new Stack<Token<?>>();
-		
-		for(int i = 0; i<l1.size(); i++) {
-			
+
+		LinkedList<Token<?>> outputQueue = new LinkedList<Token<?>>(); // Output Queue
+
+		Stack<Token<?>> oprStack = new Stack<Token<?>>(); // Operator Stack
+
+		for (int i = 0; i < l1.size(); i++) {
+
 			Token<?> token = l1.get(i);
-			String tokenStr = token.toString(); 
-			//if the token is an operand
-			if(!token.isOperator) {
+			String tokenStr = token.toString();
+			// if the token is an operand
+			if (!token.isOperator) {
 				outputQueue.add(token);
 			}
-			
-			//if the token is "("
-			else if(tokenStr.equals("(")){
+
+			// if the token is "("
+			else if (tokenStr.equals("(")) {
 				oprStack.push(token);
 			}
-			
-			//if the token is ")"
-			else if(tokenStr.equals(")")) {
-				if(!oprStack.isEmpty()) {
-					while(!oprStack.peek().toString().equals("(")) {
+
+			// if the token is ")"
+			else if (tokenStr.equals(")")) {
+				if (!oprStack.isEmpty()) {
+					while (!oprStack.peek().toString().equals("(")) {
 						outputQueue.add(oprStack.pop());
 					}
-				oprStack.pop();
+					oprStack.pop();
 				}
 			}
-			
-			//if the token is any other operator
+
+			// if the token is any other operator
 			else {
-				while(!oprStack.isEmpty()){
-					if(precisionTable.get(oprStack.peek().toString()) >= precisionTable.get(tokenStr) && !token.toString().equals("^"))
+				while (!oprStack.isEmpty()) {
+					if (precedenceTable.get(oprStack.peek().toString()) >= precedenceTable.get(tokenStr)
+							&& !token.toString().equals("^"))
 						outputQueue.add(oprStack.pop());
 					else
 						break;
@@ -63,17 +79,18 @@ public class ShuntingYard {
 				oprStack.push(token);
 			}
 		}
-		
-		//If at the end stack is not empty
-		while(!oprStack.isEmpty()) {
-			outputQueue.add(oprStack.pop());	
+
+		// If at the end of reading tokens, stack is not empty
+		while (!oprStack.isEmpty()) {
+			outputQueue.add(oprStack.pop());
 		}
-			
+
+		// Convert list of tokens to a string which is an equivalent post-fix expression
 		StringBuilder postfixExpr = new StringBuilder();
-		for(Token<?> t : outputQueue) {
+		for (Token<?> t : outputQueue) {
 			postfixExpr.append(t.toString() + " ");
 		}
-		
+
 		return postfixExpr.toString();
 	}
 
