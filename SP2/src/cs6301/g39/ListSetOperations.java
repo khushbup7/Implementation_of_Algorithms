@@ -1,4 +1,4 @@
-/** List class for running breadth first search algorithm on a given class
+/** Lists implementing sorted sets, functions for union, intersection, and set difference of the sets.
  *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
  *  Ver 1.0: 2017/09/06 Initial class
  *  Ver 1.1: 2017/09/08 Created next method for easy and fail safe version of iterator.next()
