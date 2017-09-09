@@ -18,14 +18,14 @@ public class TestList {
 		l2.add(7);
 		l2.add(8);
 		List<Integer> outList = new LinkedList<Integer>();
-		LinkedListSetOperations.union(l1, l2, outList);
+		ListSetOperations.union(l1, l2, outList);
 		System.out.println(outList);
 		outList = new LinkedList<Integer>();
-		LinkedListSetOperations.intersect(l1, l2, outList);
+		ListSetOperations.intersect(l1, l2, outList);
 		System.out.println(outList);
 		outList = new LinkedList<Integer>();
-		LinkedListSetOperations.difference(l1, l2, outList);
+		ListSetOperations.difference(l1, l2, outList);
 		System.out.println(outList);
 	}
-	
+
 }
