@@ -6,6 +6,8 @@
 package cs6301.g39;
 
 import java.util.LinkedList;
+import java.util.Stack;
+
 
 public class Num  implements Comparable<Num> {
 
@@ -37,6 +39,13 @@ public class Num  implements Comparable<Num> {
 
     // Implement Karatsuba algorithm for excellence credit
     static Num product(Num a, Num b) {
+    	//TODO check if one of the number is smaller or not
+    
+    		
+    	long m = Math.max(a.value.size(), b.value.size()); 
+    	long m2 = m/2;
+    	
+    	
 	return null;
     }
 
@@ -76,14 +85,21 @@ public class Num  implements Comparable<Num> {
     // For example, if base=100, and the number stored corresponds to 10965,
     // then the output is "100: 65 9 1"
     void printList() {
+    	for(Long l : value)
+    		System.out.println(l);
     }
     
     // Return number to a string in base 10
     public String toString() {
     	StringBuilder sb = new StringBuilder();
+    	Stack<Long> valStack = new Stack<Long>();
     	
     	for(Long l : value)
-    		sb.append(l.toString());
+    		valStack.push(l);
+    	
+    	while(!valStack.isEmpty()) {
+    		sb.append(valStack.pop().toString());
+    	}
     		
     	return sb.toString();
     }
