@@ -73,8 +73,9 @@ public class Num  implements Comparable<Num> {
     }
 
     static Num subtract(Num a, Num b) {
-    	
-	return null;
+    	b.sign = !b.sign;
+    	return add(a, b);
+	
     }
 
     // Implement Karatsuba algorithm for excellence credit
