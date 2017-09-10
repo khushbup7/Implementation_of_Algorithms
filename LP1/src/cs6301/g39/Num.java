@@ -16,6 +16,7 @@ public class Num  implements Comparable<Num> {
     static long base = defaultBase;  // Change as needed
     LinkedList<Long> value = new LinkedList<Long>();
     boolean sign = false;
+    int size = 0;
 
     /* Start of Level 1 */
     Num(String s) {
@@ -28,6 +29,7 @@ public class Num  implements Comparable<Num> {
     		StringBuilder tempStr = new StringBuilder();
     		tempStr.append(s.charAt(i));
     		value.addFirst(Long.valueOf(tempStr.toString()));
+    		size++;
     	}
     }
 
@@ -42,6 +44,7 @@ public class Num  implements Comparable<Num> {
     	while(x > 0) {
     		value.add(x%base);
     		x = x / base;
+    		size++;
     	}
     }
 
@@ -73,8 +76,43 @@ public class Num  implements Comparable<Num> {
     }
 
     static Num subtract(Num a, Num b) {
-    	b.sign = !b.sign;
-    	return add(a, b);
+    	
+    	if(a.sign && !b.sign) {
+    		b.sign = !b.sign;
+    		return Num.add(a, b);
+    	}
+    	
+    	if(!a.sign && b.sign) {
+    		b.sign = !b.sign;
+    		return Num.add(a, b);
+    	}
+    	
+    	if(a.compareTo(b) < 0) {
+    		Num res = Num.subtract(b, a);
+    		res.sign = false;
+    	}
+    		
+    	Num res = new Num(0);
+    	Iterator<Long> itA = a.value.iterator();
+    	Iterator<Long> itB = b.value.iterator();
+    	
+    	int borrow = 0;
+    	long valueA, valueB;
+    	while(itA.hasNext()  || itB.hasNext()) {
+    		valueA = next(itA) + borrow;
+    		valueB = next(itB);
+    		
+    		if(valueA >= valueB) {
+    			borrow = 0;
+    			res.value.add(valueA - valueB);
+    		}
+    		else {
+    			borrow = -1;
+    			valueA =  Num.base + valueA;
+    			res.value.add(valueA - valueB);
+    		}
+    	}
+    	return res;
 	
     }
 
@@ -139,7 +177,25 @@ public class Num  implements Comparable<Num> {
     }
     // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
     public int compareTo(Num other) {
-	return 0;
+    	if(this.size < other.size)
+    		return -1;
+    	if(this.size > other.size)
+    		return 1;
+    	
+    	int res = 0;
+    	Iterator<Long> itA = this.value.iterator();
+    	Iterator<Long> itB = other.value.iterator();
+    	long valueA, valueB;
+    	
+    	while(itA.hasNext() && itB.hasNext()) {
+    		valueA = next(itA);
+    		valueB = next(itB);
+    		if(valueA < valueB)
+    			res = -1;
+    		else if(valueA > valueB)
+    			res = 1;
+    	}
+	return res;
     }
     
     // Output using the format "base: elements of list ..."
@@ -166,4 +222,5 @@ public class Num  implements Comparable<Num> {
     }
 
     public long base() { return base; }
+    
 }
