@@ -15,6 +15,7 @@ public class TopologicalOrder1 extends GraphAlgorithm<TopologicalOrder1.TopVerte
 	
 	public TopologicalOrder1(Graph g) {
 		super(g);
+		
 		// TODO Auto-generated constructor stub
 	}
 

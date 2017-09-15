@@ -5,7 +5,7 @@ import cs6301.g39.Graph;
 public class GraphAlgorithm<T> {
     Graph g;
     // Algorithm uses a parallel array for storing information about vertices
-    T[] node;
+    protected T[] node;
 
     public GraphAlgorithm(Graph g) {
 	this.g = g;
