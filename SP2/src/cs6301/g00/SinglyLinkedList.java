@@ -151,6 +151,15 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 		tail0.next = head1;
 		tail1.next = null;
 	}
+	
+	 public void multiUnzip(int k) {
+		   	// Rearrange elements of a singly linked list by chaining
+		   	// together elements that are k apart.  k=2 is the unzip
+		   	// function discussed in class.  If the list has elements
+			// 1..10 in order, after multiUnzip(3), the elements will be
+		   	// rearranged as: 1 4 7 10 2 5 8 3 6 9.  Instead if we call
+			// multiUnzip(4), the list 1..10 will become 1 5 9 2 6 10 3 7 4 8.
+	}
 
 	public static void main(String[] args) throws NoSuchElementException {
 		int n = 10;
