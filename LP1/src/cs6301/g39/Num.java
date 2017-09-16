@@ -1,4 +1,3 @@
-
 // Starter code for lp1.
 
 // Change following line to your group number
@@ -118,35 +117,47 @@ public class Num  implements Comparable<Num> {
 
     // Implement Karatsuba algorithm for excellence credit
     static Num product(Num a, Num b) {
-    	if(Long.getLong(a.toString()) < 10 || Long.getLong(b.toString())<10)
-    		return new Num(Long.getLong(a.toString()) * Long.getLong(b.toString()));
+    	    	
+    	if(a.toString().length() < 2 || b.toString().length() < 2) {
+    		System.out.println("a in f :" + a.toString());
+    		System.out.println("b in f :" + b.toString());
+    		
+    		return new Num(Long.parseLong(a.toString()) * Long.parseLong(b.toString()));
+    	}
+    		
     		
     	long m = Math.max(a.value.size(), b.value.size()); 
-    	long m2 = m/2;
+    	long k = m/2;
     	
     	String aStr = a.toString();
     	String bStr = b.toString();
     	
-    	Num aHigh = new Num(aStr.substring(0, aStr.length()-(int)m2));
-    	Num aLow = new Num(aStr.substring(aStr.length()-(int)m2+1));
-    	Num bHigh = new Num(bStr.substring(0, bStr.length()-(int)m2));
-    	Num bLow = new Num(bStr.substring(bStr.length()-(int)m2+1));
+    	Num aHigh = new Num(aStr.substring(0, aStr.length()-(int)k));
+    	
+    	Num aLow = new Num(aStr.substring(aStr.length()-(int)k));
+    	Num bHigh = new Num(bStr.substring(0, bStr.length()-(int)k));
+    	Num bLow = new Num(bStr.substring(bStr.length()-(int)k));
     	
     	Num z0 = product(aLow, bLow);
     	Num z1 = product(add(aLow, aHigh), add(bLow, bHigh));
     	Num z2 = product(aHigh, bHigh);
-    	
-    	Num base2m2 = new Num((long)Math.pow(10,2*m2));
-    	Num basem2 = new Num((long)Math.pow(10,m2));
-    	
+    		
     	Num temp = subtract(subtract(z1, z2), z0);
     	
-	return add(z0, add(product(z2,base2m2), product(temp,basem2)));
+	return add(z0, add(Num.shift(z2,2*k), Num.shift(temp, k)));
     }
 
     // Use divide and conquer
     static Num power(Num a, long n) {
 	return null;
+    }
+    
+    //Shift operation
+    static Num shift(Num a, long n) {
+    	for(int i = 0; i < n; i++) {
+    		a.value.addFirst((long)0);
+    	}
+    	return a;
     }
     /* End of Level 1 */
 

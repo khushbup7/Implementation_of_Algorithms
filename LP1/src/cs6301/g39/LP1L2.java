@@ -9,7 +9,7 @@ public class LP1L2 {
 	Num x = new Num(-999);
 	Num y = new Num("56");
 	Num z = Num.add(x, y);
-	System.out.println(z);
+	System.out.println(y.toString());
 	/*
 	Num a = Num.power(x, y);
 	System.out.println(a);
