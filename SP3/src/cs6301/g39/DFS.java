@@ -23,14 +23,25 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 			componentNo = -1;
 			top = -1;
 			fin = -1;
-			
 		}	
+		
+		//Checking if v is an ancestor of u in DFS tree or not
+		boolean isAncestor(DFSVertex v){
+			DFSVertex temp = this.parent;  //u's parent in DFS tree
+			 while(temp!= null) {
+				 if(temp == v)
+					 return true;
+				 temp = temp.parent;
+			 }
+			return false;
+		}
 	}
 	
 	int topNum;
 	int cNo;
 	int finTime;
 	LinkedList<Graph.Vertex> decFinList = new LinkedList<Graph.Vertex>();
+	boolean isDAG;
 	
 	public DFS(Graph g) {
 		super(g);
@@ -43,6 +54,7 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 		topNum = g.size();
 		cNo = 0;
 		finTime = 0;
+		isDAG = true;
 	}
 	
 	void dfs(Iterator<Graph.Vertex> it) {
@@ -75,6 +87,10 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 				dvV.parent = dvU;
 				DFSVisit(v);
 			}
+			else {
+				if(dvU.isAncestor(dvV))
+					isDAG = false;					
+			}
 		}
 		
 		dvU.fin = ++finTime;
@@ -86,12 +102,10 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 		return getVertex(u).seen;
 	    }
 		
-		/*
-	    Graph.Vertex getParent(Graph.Vertex u) {
+	    DFSVertex getParent(Graph.Vertex u) {
 		return getVertex(u).parent;
 	    }
-	    */
-
+	    
 	    int distance(Graph.Vertex u) {
 		return getVertex(u).distance;
 	    }
@@ -110,6 +124,7 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 	    	topNum = g.size();
 			cNo = 0;
 			finTime = 0;
+			isDAG = true;
 			decFinList.removeAll(decFinList);
 	    }
 }

@@ -21,7 +21,11 @@ public class TopologicalTest {
 		    
 		    TopologicalOrder1 tp = new TopologicalOrder1(g);
 			System.out.println(tp.toplogicalOrder1(g));
+			
+			System.out.println(TopologicalOrder2.topologicalOrder2(g));
 		    
+		    
+			
 		    Graph g1 = new Graph(11);
 			g1.directed = true;
 			    
@@ -43,8 +47,18 @@ public class TopologicalTest {
 			    g1.addEdge(g1.getVertex(2), g1.getVertex(7), 1);
 			    g1.addEdge(g1.getVertex(2), g1.getVertex(3), 1);
 			    
-		    
 		System.out.println("is:" + StronglyConnectedComponents.stronglyConnectedComponents(g1));
-
+		System.out.println(tp.toplogicalOrder1(g1));
+		
+		
+		Graph g3 = new Graph(3);
+		g3.directed = true;
+		g.addEdge(g3.getVertex(1), g3.getVertex(2), 1);
+		g3.addEdge(g3.getVertex(3), g3.getVertex(1), 1);
+		g3.addEdge(g3.getVertex(2), g3.getVertex(3), 1);
+		
+		System.out.println(TopologicalOrder2.topologicalOrder2(g3));
+		System.out.println(TopologicalOrder2.topologicalOrder2(g1));
+	
 	}
 }
