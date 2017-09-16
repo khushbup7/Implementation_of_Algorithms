@@ -17,13 +17,16 @@ public class Num  implements Comparable<Num> {
     LinkedList<Long> value = new LinkedList<Long>();
     boolean sign = false;
     int size = 0;
+    
+    private Num() {}
 
     /* Start of Level 1 */
     Num(String s) {
-    	if(s.lastIndexOf('-') >= 0)
-    		sign = false;
-    	else
+    	if(s.lastIndexOf('-') >= 0) {
     		sign = true;
+    		s = s.replace("-", "");
+    	}
+    		
     	
     	for(int i = 0; i < s.length(); i++) {
     		StringBuilder tempStr = new StringBuilder();
@@ -36,11 +39,12 @@ public class Num  implements Comparable<Num> {
     Num(long x) {
     	if(x<0) {
     		x = Math.abs(x);
-    		sign = false;
-    	}
-    	else
     		sign = true;
+    	}
     	
+    	if(x==0) {
+    		value.add(x);
+    	}
     	while(x > 0) {
     		value.add(x%base);
     		x = x / base;
@@ -49,20 +53,21 @@ public class Num  implements Comparable<Num> {
     }
 
     static Num add(Num a, Num b) {
-    	Num result = new Num(0);
+    	Num result = new Num();
     	
-    	if(a.sign == false && b.sign == true)
-    		return subtract(b, a);
-    	else if(a.sign == true && b.sign == false)
-    		return subtract(a,b);
-    	else if(a.sign == true && b.sign == true)
+    	if(a.sign && b.sign)
     		result.sign = true;
-    	else
-    		result.sign =  false;
-    		
+    	if(!a.sign && b.sign) {
+    		b.sign = false;
+    		return subtract(a,b);
+    	}
+    	if(a.sign && !b.sign) {
+    		a.sign = false;
+    		return subtract(b,a);
+    	}
+
     	long carry = 0;
     	long sum = 0;
-    	
     	
     	Iterator<Long> itA = a.value.iterator();
     	Iterator<Long> itB = b.value.iterator();
@@ -76,23 +81,24 @@ public class Num  implements Comparable<Num> {
     }
 
     static Num subtract(Num a, Num b) {
+    	Num res = new Num();
     	
-    	if(a.sign && !b.sign) {
+    	if(a.sign ^ b.sign) {
     		b.sign = !b.sign;
-    		return Num.add(a, b);
-    	}
-    	
-    	if(!a.sign && b.sign) {
-    		b.sign = !b.sign;
-    		return Num.add(a, b);
+    		return add(a,b);
+    	} 
+    		
+    	if(a.compareTo(b) == 0) {
+    		return new Num(0);
     	}
     	
     	if(a.compareTo(b) < 0) {
-    		Num res = Num.subtract(b, a);
-    		res.sign = false;
+    		//a.sign = !a.sign;
+    		res = subtract(b, a);
+    		res.sign = true;
+    		return res;
     	}
     		
-    	Num res = new Num(0);
     	Iterator<Long> itA = a.value.iterator();
     	Iterator<Long> itB = b.value.iterator();
     	
@@ -177,9 +183,9 @@ public class Num  implements Comparable<Num> {
     }
     // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
     public int compareTo(Num other) {
-    	if(this.size < other.size)
+    	if(this.size < other.size || (this.sign && !other.sign))
     		return -1;
-    	if(this.size > other.size)
+    	if(this.size > other.size || (!this.sign && other.sign))
     		return 1;
     	
     	int res = 0;
@@ -195,15 +201,19 @@ public class Num  implements Comparable<Num> {
     		else if(valueA > valueB)
     			res = 1;
     	}
+    	if(this.sign && other.sign)
+    		return res * -1;
 	return res;
     }
     
     // Output using the format "base: elements of list ..."
     // For example, if base=100, and the number stored corresponds to 10965,
     // then the output is "100: 65 9 1"
-    void printList() {
+    public void printList() {
+    	System.out.print(base + " :");
     	for(Long l : value)
-    		System.out.println(l);
+    		System.out.print(" " + l);
+    	System.out.println("\n" +sign);
     }
     
     // Return number to a string in base 10
