@@ -1,7 +1,5 @@
 package cs6301.g39;
 
-import cs6301.g00.GraphAlgorithm;
-
 public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 	public DFS(Graph g) {
 		super(g);

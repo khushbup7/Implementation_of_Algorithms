@@ -1,6 +1,4 @@
-package cs6301.g00;
-
-import cs6301.g39.Graph;
+package cs6301.g39;
 
 public class GraphAlgorithm<T> {
     Graph g;

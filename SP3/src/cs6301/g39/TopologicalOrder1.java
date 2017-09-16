@@ -9,33 +9,54 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import cs6301.g00.GraphAlgorithm;
+public class TopologicalOrder1 extends GraphAlgorithm<TopologicalOrder1.TOPVertex> {
+	
+	public static class TOPVertex {
+		int inDegree;
+		int top;
 
-public class TopologicalOrder1 extends GraphAlgorithm<TopologicalOrder1.TopVertex> {
+		TOPVertex(Graph.Vertex u) {
+			inDegree = u.revAdj.size();
+			top = -1;
+			if(inDegree == 0)
+				queue.add(u);
+		}
+	}
+	
+	int topNum;
+
+	static Queue<Graph.Vertex> queue = new LinkedList<Graph.Vertex>();
+	List<Graph.Vertex> topList = new ArrayList<Graph.Vertex>();
 	
 	public TopologicalOrder1(Graph g) {
 		super(g);
 		
-		// TODO Auto-generated constructor stub
-	}
+		topNum = 0;
+		node = new TOPVertex[g.size()];
 
-
-
-	static class TopVertex {
-		int inDegree;
-		TopVertex(Graph.Vertex u) {
-			
+		for(Graph.Vertex u: g) {
+		    node[u.getName()] = new TOPVertex(u);
+		    
 		}
 	}
-	
-	
-	
-	   public static List<Graph.Vertex> toplogicalOrder1(Graph g) {
-		   
-		   List<Graph.Vertex> result = new ArrayList<Graph.Vertex>();
-		   Queue<Graph.Vertex> queue = new LinkedList<Graph.Vertex>();
-		   
-		   //Iterator<Graph>
-		   return null;
-	   }
+
+	public List<Graph.Vertex> toplogicalOrder1(Graph g) {
+		int topNum = 0;
+		while(!queue.isEmpty()) {
+			Graph.Vertex curVertex = queue.remove();
+			getVertex(curVertex).top = ++topNum;
+			this.topList.add(curVertex);
+			
+			for(Graph.Edge e : curVertex.adj) {
+				Graph.Vertex v = e.otherEnd(curVertex);
+				if(--getVertex(v).inDegree == 0) 
+					queue.add(v);
+			}
+		}
+		
+		if(topNum != g.size()) 
+			return null;
+		
+		return this.topList;
+	}
 }
