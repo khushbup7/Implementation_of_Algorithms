@@ -22,10 +22,10 @@ public class Num implements Comparable<Num> {
 
 	/* Start of Level 1 */
 	Num(String s) {
-		if (s.lastIndexOf('-') >= 0)
-			sign = false;
-		else
+		if (s.lastIndexOf('-') >= 0) {
 			sign = true;
+			s = s.replace("-", "");
+		}
 
 		for (int i = 0; i < s.length(); i++) {
 			StringBuilder tempStr = new StringBuilder();
@@ -38,9 +38,11 @@ public class Num implements Comparable<Num> {
 	Num(long x) {
 		if (x < 0) {
 			x = Math.abs(x);
-			sign = false;
-		} else
 			sign = true;
+		}
+
+		if (x == 0)
+			value.add(x);
 
 		while (x > 0) {
 			value.add(x % base);
@@ -50,7 +52,23 @@ public class Num implements Comparable<Num> {
 	}
 
 	static Num add(Num a, Num b) {
-		Num result = new Num(0);
+		Num result = new Num();
+
+		if (a.sign && b.sign)
+			result.sign = true;
+		if (!a.sign && b.sign) {
+			b.sign = false;
+			result = subtract(a, b);
+			b.sign = true;
+			return result;
+		}
+		if (a.sign && !b.sign) {
+			a.sign = false;
+			result = subtract(b, a);
+			a.sign = true;
+			return result;
+
+		}
 
 		long carry = 0;
 		long sum = 0;
@@ -68,42 +86,45 @@ public class Num implements Comparable<Num> {
 
 	static Num subtract(Num a, Num b) {
 
-		if (a.sign && !b.sign) {
-			b.sign = !b.sign;
-			return Num.add(a, b);
-		}
-
-		if (!a.sign && b.sign) {
-			b.sign = !b.sign;
-			return Num.add(a, b);
-		}
-
-		if (a.compareTo(b) < 0) {
-			// a.sign = !a.sign;
-			a.sign = !a.sign;
-		}
-
-		Num res = new Num(0);
-		Iterator<Long> itA = a.value.iterator();
-		Iterator<Long> itB = b.value.iterator();
-
-		int borrow = 0;
-		long valueA, valueB;
-		while (itA.hasNext() || itB.hasNext()) {
-			valueA = next(itA) + borrow;
-			valueB = next(itB);
-
-			if (valueA >= valueB) {
-				borrow = 0;
-				res.value.add(valueA - valueB);
-			} else {
-				borrow = -1;
-				valueA = Num.base + valueA;
-				res.value.add(valueA - valueB);
-			}
-		}
-		return res;
-
+Num res = new Num();
+    	
+    	if(a.sign ^ b.sign) {
+    		b.sign = !b.sign;
+    		return add(a,b);
+    	} 
+    		
+    	if(a.compareTo(b) == 0) {
+    		return new Num(0);
+    	}
+    	
+    	if(a.compareTo(b) < 0) {
+    		a.sign = !a.sign;
+    		res = subtract(b, a);
+    		a.sign = !a.sign;
+    		res.sign = true;
+    		return res;
+    	}
+    		
+    	Iterator<Long> itA = a.value.iterator();
+    	Iterator<Long> itB = b.value.iterator();
+    	
+    	int borrow = 0;
+    	long valueA, valueB;
+    	while(itA.hasNext()  || itB.hasNext()) {
+    		valueA = next(itA) + borrow;
+    		valueB = next(itB);
+    		
+    		if(valueA >= valueB) {
+    			borrow = 0;
+    			res.value.add(valueA - valueB);
+    		}
+    		else {
+    			borrow = -1;
+    			valueA =  Num.base + valueA;
+    			res.value.add(valueA - valueB);
+    		}
+    	}
+    	return res;
 	}
 
 	// Implement Karatsuba algorithm for excellence credit
@@ -152,7 +173,7 @@ public class Num implements Comparable<Num> {
 			return product(res, res);
 		else
 			return product(a, product(res, res));
-    				
+
 	}
 
 	// Shift operation
@@ -224,10 +245,12 @@ public class Num implements Comparable<Num> {
 	// For example, if base=100, and the number stored corresponds to 10965,
 	// then the output is "100: 65 9 1"
 	void printList() {
-		for (Long l : value)
-			System.out.println(l);
+		System.out.print(base + " :");
+    	for(Long l : value)
+    		System.out.print(" " + l);
+    	System.out.println("\n" +sign);
 	}
-
+	
 	// Return number to a string in base 10
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
