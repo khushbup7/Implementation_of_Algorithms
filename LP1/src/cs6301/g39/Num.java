@@ -152,7 +152,7 @@ public class Num implements Comparable<Num> {
 			return product(res, res);
 		else
 			return product(a, product(res, res));
-
+    				
 	}
 
 	// Shift operation
