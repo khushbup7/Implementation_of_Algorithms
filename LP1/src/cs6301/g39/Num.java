@@ -16,6 +16,9 @@ public class Num  implements Comparable<Num> {
     LinkedList<Long> value = new LinkedList<Long>();
     boolean sign = false;
     int size = 0;
+    
+    private Num() {
+    }
 
     /* Start of Level 1 */
     Num(String s) {
@@ -162,8 +165,6 @@ public class Num  implements Comparable<Num> {
     		return product(res, res);
     	else
     		return product(a, product(res, res));
-    				
-	return null;
     }
     
     //Shift operation
@@ -177,6 +178,7 @@ public class Num  implements Comparable<Num> {
 
     /* Start of Level 2 */
     static Num divide(Num a, Num b) {
+    	
 	return null;
     }
 
@@ -186,7 +188,20 @@ public class Num  implements Comparable<Num> {
 
     // Use divide and conquer
     static Num power(Num a, Num n) {
-	return null;
+
+    	//TODO do edge/base cases
+    	
+    	if(n.value.size() == 0)
+    		return new Num(1);
+    	
+    	Num res = new Num();
+    	
+    	if()
+    	
+    	long leastSigDig = n.value.removeFirst();
+    	res = product(power(power(a, n),base), power(a, leastSigDig));
+    	
+	return res;
     }
 
     static Num squareRoot(Num a) {

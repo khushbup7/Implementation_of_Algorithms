@@ -6,9 +6,9 @@ package cs6301.g39;
 
 public class LP1L1 {
     public static void main(String[] args) {
-	Num x = new Num(643663);
-	Num y = new Num("48569");
-	System.out.println(Num.product(x,y));
+	Num x = new Num(65);
+	Num y = new Num("4");
+	System.out.println(Num.power(x,y));
     }
 }
 
