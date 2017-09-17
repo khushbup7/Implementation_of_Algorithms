@@ -149,12 +149,6 @@ public class Num  implements Comparable<Num> {
 
     // Use divide and conquer
     static Num power(Num a, long n) {
-    	
-    	if(n == 0)
-    		return new Num(1);
-    	else if(n == 1)
-    		return a;
-    				
 	return null;
     }
     
