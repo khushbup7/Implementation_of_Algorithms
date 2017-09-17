@@ -9,7 +9,8 @@ public class LP1L1 {
 	Num x = new Num(65);
 	Num y = new Num("4");
 	System.out.println(Num.power(x,y));
-	System.out.println(x.compareTo(y));
+	Num.add(x, y).printList();
+	//Num.subtract(x, y).printList();
     }
 }
 
