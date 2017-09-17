@@ -51,9 +51,10 @@ public class Num  implements Comparable<Num> {
     	Num result = new Num(0);
     	
     	if(a.sign == false && b.sign == true)
-    		return subtract(b, a);
-    	else if(a.sign == true && b.sign == false)
-    		return subtract(a,b);
+    		result = subtract(a,b);
+    		b.sign = true;
+    		return result;
+    		return subtract(b,a);
     	else if(a.sign == true && b.sign == true)
     		result.sign = true;
     	else
@@ -87,8 +88,9 @@ public class Num  implements Comparable<Num> {
     	}
     	
     	if(a.compareTo(b) < 0) {
-    		Num res = Num.subtract(b, a);
+    		//a.sign = !a.sign;
     		res.sign = false;
+    		a.sign = !a.sign;
     	}
     		
     	Num res = new Num(0);
@@ -200,25 +202,36 @@ public class Num  implements Comparable<Num> {
     }
     // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
     public int compareTo(Num other) {
-    	if(this.size < other.size)
+    	int mag = compareMagnitude(this, other);
+    	int sign = this.sign ? -1 : 1;
+    	int othersign = other.sign ? -1 : 1;
+    	
+    	
+    	 return (sign == othersign
+    			   ? sign * mag
+    			   : (sign > othersign ? 1 : -1));
+    }
+    
+    
+    int compareMagnitude(Num a, Num b) {
+    	if(a.size < b.size)
     		return -1;
-    	if(this.size > other.size)
+    	if(a.size > b.size)    		
     		return 1;
     	
-    	int res = 0;
-    	Iterator<Long> itA = this.value.iterator();
-    	Iterator<Long> itB = other.value.iterator();
+    	Iterator<Long> itA = a.value.iterator();
+    	Iterator<Long> itB = b.value.iterator();
     	long valueA, valueB;
     	
     	while(itA.hasNext() && itB.hasNext()) {
     		valueA = next(itA);
     		valueB = next(itB);
     		if(valueA < valueB)
-    			res = -1;
+    			return -1;
     		else if(valueA > valueB)
-    			res = 1;
+    			return 1;
     	}
-	return res;
+    	return 0;
     }
     
     // Output using the format "base: elements of list ..."
