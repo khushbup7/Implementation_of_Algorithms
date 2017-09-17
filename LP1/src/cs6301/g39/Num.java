@@ -150,7 +150,7 @@ public class Num  implements Comparable<Num> {
     // Use divide and conquer
     static Num power(Num a, long n) {
     	
-    	Num res =  new Num();
+    	Num res =  new Num(0);
     	if(n == 0)
     		return new Num(1);
     	else if(n == 1)
@@ -162,8 +162,6 @@ public class Num  implements Comparable<Num> {
     		return product(res, res);
     	else
     		return product(a, product(res, res));
-    				
-	return null;
     }
     
     //Shift operation
