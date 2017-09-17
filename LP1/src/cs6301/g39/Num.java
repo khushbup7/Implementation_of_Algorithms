@@ -86,45 +86,44 @@ public class Num implements Comparable<Num> {
 
 	static Num subtract(Num a, Num b) {
 
-Num res = new Num();
-    	
-    	if(a.sign ^ b.sign) {
-    		b.sign = !b.sign;
-    		return add(a,b);
-    	} 
-    		
-    	if(a.compareTo(b) == 0) {
-    		return new Num(0);
-    	}
-    	
-    	if(a.compareTo(b) < 0) {
-    		a.sign = !a.sign;
-    		res = subtract(b, a);
-    		a.sign = !a.sign;
-    		res.sign = true;
-    		return res;
-    	}
-    		
-    	Iterator<Long> itA = a.value.iterator();
-    	Iterator<Long> itB = b.value.iterator();
-    	
-    	int borrow = 0;
-    	long valueA, valueB;
-    	while(itA.hasNext()  || itB.hasNext()) {
-    		valueA = next(itA) + borrow;
-    		valueB = next(itB);
-    		
-    		if(valueA >= valueB) {
-    			borrow = 0;
-    			res.value.add(valueA - valueB);
-    		}
-    		else {
-    			borrow = -1;
-    			valueA =  Num.base + valueA;
-    			res.value.add(valueA - valueB);
-    		}
-    	}
-    	return res;
+		Num res = new Num();
+
+		if (a.sign ^ b.sign) {
+			b.sign = !b.sign;
+			return add(a, b);
+		}
+
+		if (a.compareTo(b) == 0) {
+			return new Num(0);
+		}
+
+		if (a.compareTo(b) < 0) {
+			a.sign = !a.sign;
+			res = subtract(b, a);
+			a.sign = !a.sign;
+			res.sign = true;
+			return res;
+		}
+
+		Iterator<Long> itA = a.value.iterator();
+		Iterator<Long> itB = b.value.iterator();
+
+		int borrow = 0;
+		long valueA, valueB;
+		while (itA.hasNext() || itB.hasNext()) {
+			valueA = next(itA) + borrow;
+			valueB = next(itB);
+
+			if (valueA >= valueB) {
+				borrow = 0;
+				res.value.add(valueA - valueB);
+			} else {
+				borrow = -1;
+				valueA = Num.base + valueA;
+				res.value.add(valueA - valueB);
+			}
+		}
+		return res;
 	}
 
 	// Implement Karatsuba algorithm for excellence credit
@@ -246,11 +245,11 @@ Num res = new Num();
 	// then the output is "100: 65 9 1"
 	void printList() {
 		System.out.print(base + " :");
-    	for(Long l : value)
-    		System.out.print(" " + l);
-    	System.out.println("\n" +sign);
+		for (Long l : value)
+			System.out.print(" " + l);
+		System.out.println("\n" + sign);
 	}
-	
+
 	// Return number to a string in base 10
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

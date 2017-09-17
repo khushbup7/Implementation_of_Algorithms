@@ -6,10 +6,11 @@ package cs6301.g39;
 
 public class LP1L1 {
     public static void main(String[] args) {
-	Num x = new Num(145);
-	Num y = new Num("2345");
+	Num x = new Num(-1);
+	Num y = new Num("-2");
 	
-	System.out.println(x.compareTo(y));
+	Num.add(x, y).printList();
+	//Num.subtract(x, y).printList();
     }
 }
 
