@@ -196,7 +196,7 @@ public class Num  implements Comparable<Num> {
     	
     	Num res = new Num();
     	
-    	if()
+    	
     	
     	long leastSigDig = n.value.removeFirst();
     	res = product(power(power(a, n),base), power(a, leastSigDig));
