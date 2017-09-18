@@ -131,9 +131,6 @@ Num res = new Num();
 	static Num product(Num a, Num b) {
 
 		if (a.toString().length() < 2 || b.toString().length() < 2) {
-			System.out.println("a in f :" + a.toString());
-			System.out.println("b in f :" + b.toString());
-
 			return new Num(Long.parseLong(a.toString()) * Long.parseLong(b.toString()));
 		}
 
@@ -154,8 +151,11 @@ Num res = new Num();
 		Num z2 = product(aHigh, bHigh);
 
 		Num temp = subtract(subtract(z1, z2), z0);
+		
+		Num res = add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
+		res.sign = a.sign ^ b.sign;
 
-		return add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
+		return res;
 	}
 
 	// Use divide and conquer
@@ -204,8 +204,6 @@ Num res = new Num();
     		return new Num(1);
     	
     	Num res = new Num();
-    	
-    	
     	
     	long leastSigDig = n.value.removeFirst();
     	res = product(power(power(a, n),base), power(a, leastSigDig));
