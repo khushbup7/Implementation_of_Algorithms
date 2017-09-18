@@ -1,3 +1,9 @@
+/** Base Class for Graph algorithms
+ *  @author rbk
+ *  Ver 1.0: 2017/09/16
+ *  
+*/
+
 package cs6301.g39;
 
 public class GraphAlgorithm<T> {
