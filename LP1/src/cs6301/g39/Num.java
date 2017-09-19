@@ -11,12 +11,13 @@ import java.util.Stack;
 
 public class Num implements Comparable<Num> {
 
-	static long defaultBase = 10; // This can be changed to what you want it to
+	static int defaultBase = 10; // This can be changed to what you want it to
 									// be.
-	static long base = defaultBase; // Change as needed
+	static int base = defaultBase; // Change as needed
 	LinkedList<Long> value = new LinkedList<Long>();
 	boolean sign = false;
 
+	// Constructors
 	private Num() {
 	}
 
@@ -38,8 +39,8 @@ public class Num implements Comparable<Num> {
 			tempStr.append(s.charAt(i));
 			value.addFirst(Long.valueOf(tempStr.toString()));
 		}
-		
-		removeLeadingZeros(this);
+
+		this.removeLeadingZeros();
 	}
 
 	Num(long x) {
@@ -55,14 +56,6 @@ public class Num implements Comparable<Num> {
 			value.add(x % base);
 			x = x / base;
 		}
-	}
-	
-	private boolean isZero() {
-		for(Long l : this.value) {
-			if(l != 0)
-				return false;
-		}
-		return true;
 	}
 
 	static Num add(Num a, Num b) {
@@ -146,18 +139,18 @@ public class Num implements Comparable<Num> {
 
 	// Implement Karatsuba algorithm for excellence credit
 	static Num product(Num a, Num b) {
-		
+
 		Num res = Karatsuba(a, b);
 		res.sign = a.sign ^ b.sign;
-		
+
 		return res;
 	}
-	
+
 	private static Num Karatsuba(Num a, Num b) {
-		
-		String aStr = a.toString();
-		String bStr = b.toString();
-		
+
+		String aStr = toString(a.value);
+		String bStr = toString(b.value);
+
 		if (aStr.length() < 2 || bStr.length() < 2) {
 			return new Num(Long.parseLong(a.toString()) * Long.parseLong(b.toString()));
 		}
@@ -175,7 +168,7 @@ public class Num implements Comparable<Num> {
 		Num z2 = Karatsuba(aHigh, bHigh);
 
 		Num temp = subtract(subtract(z1, z2), z0);
-		
+
 		return add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
 	}
 
@@ -183,11 +176,11 @@ public class Num implements Comparable<Num> {
 	static Num power(Num a, long n) {
 
 		Num res = new Num();
-		if(n%2 == 0)
+		if (n % 2 == 0)
 			res.sign = false;
 		else
 			res.sign = a.sign;
-		
+
 		if (n == 0)
 			return new Num(1);
 		else if (n == 1)
@@ -198,133 +191,130 @@ public class Num implements Comparable<Num> {
 		if (n % 2 == 0)
 			return product(res, res);
 		else
-			return product(product(res, res),a);
+			return product(product(res, res), a);
 
 	}
 
-	// Shift operation
-	static Num shift(Num a, long n) {
-		for (int i = 0; i < n; i++) {
-			a.value.addFirst((long) 0);
-		}
-		return a;
-	}
 	/* End of Level 1 */
 
 	/* Start of Level 2 */
-	static Num divide(Num a, Num b) {
-		if(b.isZero()){
-			//TODO throw excetption 
+	static Num divide(Num a, Num b) throws Exception {
+		if (b.isZero()) {
+			throw new ArithmeticException("Cannot divide by zero");
 		}
-		
-		if(a.compareTo(b) < 0)
+
+		int cmpMag = compareMagnitude(a.value, b.value);
+		if (cmpMag < 0)
 			return new Num(0);
-		
+
+		boolean resSign = a.sign ^ b.sign;
 		LinkedList<Long> res = new LinkedList<Long>();
-		
-		LinkedList<Long> cloneAList = new LinkedList<Long>(a.value);
-		
-		res = divide(new Num(1), new Num(cloneAList,false), a, b);
-		
-		return null;
-	}
-	
-	private static LinkedList<Long> divide(Num start, Num end, Num dividend, Num divisor) {
-		LinkedList<Long> mid = DivideByTwo(add(start,end).value);
-		LinkedList<Long> midPlusOne = new LinkedList(mid);
-		Long midLeastSign = midPlusOne.removeFirst();
-		midLeastSign++;
-		midPlusOne.addFirst(midLeastSign);
-		
-		Num midNum = new Num(mid, false);
-		Num midNumPlusOne = new Num(midPlusOne, false);
-		
-		Num productLeft = product(midNum, divisor);
-		Num productRight = product(midNumPlusOne, divisor);
-		
-		int leftCompare = productLeft.compareTo(dividend); 
-		int rightCompare = productRight.compareTo(dividend);
-		
-		if(leftCompare < -1 && rightCompare > 1) {
-			return midNum.value;
+
+		if (cmpMag == 0) {
+			res.add((long) 1);
+			return new Num(res, resSign);
 		}
-		
-		if(leftCompare < -1 && rightCompare < -1)
-			return divide(midNumPlusOne, end, dividend, divisor);
-		
-		if(leftCompare > 1 && rightCompare > 1)
-			return divide(start, midNumPlusOne, dividend, divisor);
-		
-		return null;
-	}
-	
-	private static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
 
-		Long mostSign = a.removeLast();
-		mostSign /= 2;
-		
-		a.addLast(mostSign);
-		return a;
+		res = divide(new Num(1), new Num(toString(a.value)), a, b);
+
+		return new Num(res, resSign);
 	}
 
-	static Num mod(Num a, Num b) {
+	private static LinkedList<Long> divide(Num start, Num end, Num dividend, Num divisor) {
+		LinkedList<Num> middleNumbers = getMiddleNumbers(start, end);
+		
+		Num productLeft = product(middleNumbers.getFirst(), divisor);
+		Num productRight = product(middleNumbers.getLast(), divisor);
+
+		int leftCompare = compareMagnitude(productLeft.value, dividend.value);
+		int rightCompare = compareMagnitude(productRight.value, dividend.value);
+
+		if (leftCompare <= 0 && rightCompare > 0) {
+			return middleNumbers.getFirst().value;
+		}
+
+		if (leftCompare < 0 && rightCompare < 0)
+			return divide(middleNumbers.getLast(), end, dividend, divisor);
+
+		if (leftCompare > 0 && rightCompare > 0)
+			return divide(start, middleNumbers.getFirst(), dividend, divisor);
+
 		return null;
+	}
+
+	static Num mod(Num a, Num b) throws Exception {
+
+		Num aByB = divide(a, b);
+		Num productB = product(aByB, b);
+		return new Num(subtract(a, productB).value, b.sign);
+
 	}
 
 	// Use divide and conquer
 	static Num power(Num a, Num n) {
-		
+
 		Num res = new Num();
-		
+
 		LinkedList<Long> pList = new LinkedList<Long>(n.value);
 		boolean pSign = n.sign;
 		Num nPower = new Num(pList, pSign);
-		
-		if(isEven(nPower))
+
+		if (isEven(nPower))
 			res.sign = false;
 		else
 			res.sign = a.sign;
-	
-		res = pow(a,nPower);
-		
+
+		res = pow(a, nPower);
+
 		return res;
 	}
-	
-	
+
 	private static Num pow(Num a, Num n) {
-		
+
 		if (n.value.size() == 0)
 			return new Num(1);
-		
+
 		long leastSigDig = n.value.removeFirst();
-		
+
 		return product(power(pow(a, n), base), power(a, leastSigDig));
-	}
-	
-	private static boolean isEven(Num n) {
-		if(base%2 == 0) {
-			System.out.println(n.value.getFirst());
-			return n.value.getFirst()%2 == 0 ? true : false;
-		}
-		else {
-			long sum = 0;
-			for(Long a : n.value)
-				sum += a;
-			System.out.println(sum);
-			return sum%2 == 0 ? true : false;
-		}
 	}
 
 	static Num squareRoot(Num a) {
+		if (a.isZero()) {
+			return new Num(0);
+		}
+
+		LinkedList<Long> res = new LinkedList<Long>();
+		res = squareRoot(new Num(1), new Num(toString(a.value)), a);
+
+		return new Num(res, false);
+	}
+
+	static LinkedList<Long> squareRoot(Num start, Num end, Num a) {
+		LinkedList<Num> middleNumbers = getMiddleNumbers(start, end);
+
+		Num productLeft = product(middleNumbers.getFirst(), middleNumbers.getFirst());
+		Num productRight = product(middleNumbers.getLast(), middleNumbers.getLast());
+
+		int leftCompare = compareMagnitude(productLeft.value, a.value);
+		int rightCompare = compareMagnitude(productRight.value, a.value);
+
+		if (leftCompare <= 0 && rightCompare > 0) {
+			return middleNumbers.getFirst().value;
+		}
+
+		if (leftCompare < 0 && rightCompare < 0)
+			return squareRoot(middleNumbers.getLast(), end, a);
+
+		if (leftCompare > 0 && rightCompare > 0)
+			return squareRoot(start, middleNumbers.getFirst(), a);
+
 		return null;
 	}
+
 	/* End of Level 2 */
 
 	// Utility functions
-
-	public static long next(Iterator<Long> it) {
-		return it.hasNext() ? it.next() : 0;
-	}
 
 	// compare "this" to "other": return +1 if this is greater, 0 if equal, -1
 	// otherwise
@@ -342,8 +332,8 @@ public class Num implements Comparable<Num> {
 		if (a.size() > b.size())
 			return 1;
 
-		Iterator<Long> itA = a.iterator();
-		Iterator<Long> itB = b.iterator();
+		Iterator<Long> itA = a.descendingIterator();
+		Iterator<Long> itB = b.descendingIterator();
 		long valueA, valueB;
 
 		while (itA.hasNext() && itB.hasNext()) {
@@ -364,15 +354,24 @@ public class Num implements Comparable<Num> {
 		System.out.print(base + " :");
 		for (Long l : value)
 			System.out.print(" " + l);
-		System.out.println("\n" + sign);
 	}
 
 	// Return number to a string in base 10
 	public String toString() {
+		this.removeLeadingZeros();
+		StringBuilder sb = new StringBuilder();
+		if (sign)
+			sb.append("-");
+
+		sb.append(toString(this.value));
+		return sb.toString();
+	}
+
+	public static String toString(LinkedList<Long> l1) {
 		StringBuilder sb = new StringBuilder();
 		Stack<Long> valStack = new Stack<Long>();
 
-		for (Long l : value)
+		for (Long l : l1)
 			valStack.push(l);
 
 		while (!valStack.isEmpty()) {
@@ -381,23 +380,91 @@ public class Num implements Comparable<Num> {
 
 		return sb.toString();
 	}
-	
-    static void removeLeadingZeros(Num a) {
+
+	void removeLeadingZeros() {
 		Stack<Long> valStack = new Stack<Long>();
-		
-		while(!a.value.isEmpty())
-			valStack.push(a.value.removeFirst());
-		
-		while(valStack.peek() == 0) 
+
+		while (!this.value.isEmpty())
+			valStack.push(this.value.removeFirst());
+
+		while (!valStack.isEmpty() && valStack.peek() == 0)
 			valStack.pop();
-		
-		while(!valStack.isEmpty())
-			a.value.addFirst(valStack.pop());
+
+		while (!valStack.isEmpty())
+			this.value.addFirst(valStack.pop());
+
+		if (this.value.isEmpty()) {
+			this.value.add((long) 0);
+			return;
+		}
 
 	}
 
 	public long base() {
 		return base;
+	}
+	
+	public static long next(Iterator<Long> it) {
+		return it.hasNext() ? it.next() : 0;
+	}
+
+	private boolean isZero() {
+		for (Long l : this.value) {
+			if (l != 0)
+				return false;
+		}
+		return true;
+	}
+
+	// Shift operation
+	static Num shift(Num a, long n) {
+		for (int i = 0; i < n; i++) {
+			a.value.addFirst((long) 0);
+		}
+		return a;
+	}
+
+	private static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
+		Long mostSign = a.removeLast();
+		if (mostSign < 2) {
+			mostSign = mostSign * base + a.removeLast();
+			mostSign /= 2;
+			a.addLast(Long.parseLong(mostSign.toString(), base));
+			return a;
+		}
+		mostSign /= 2;
+		a.addLast(mostSign);
+		return a;
+	}
+
+	private static boolean isEven(Num n) {
+		if (base % 2 == 0) {
+			System.out.println(n.value.getFirst());
+			return n.value.getFirst() % 2 == 0 ? true : false;
+		} else {
+			long sum = 0;
+			for (Long a : n.value)
+				sum += a;
+			System.out.println(sum);
+			return sum % 2 == 0 ? true : false;
+		}
+	}
+	
+	private static LinkedList<Num> getMiddleNumbers(Num start, Num end) {
+		LinkedList<Num> res = new LinkedList<Num>();
+		LinkedList<Long> mid = DivideByTwo(add(start, end).value);
+		Num midNum = new Num(mid, false);
+		midNum.removeLeadingZeros();
+
+		LinkedList<Long> midPlusOne = new LinkedList<Long>(midNum.value);
+		Long midLeastSign = midPlusOne.removeFirst();
+		midLeastSign++;
+		midPlusOne.addFirst(midLeastSign);
+		Num midNumPlusOne = new Num(midPlusOne, false);
+		
+		res.add(midNum);
+		res.add(midNumPlusOne);
+		return res;
 	}
 
 }
