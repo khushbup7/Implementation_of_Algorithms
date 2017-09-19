@@ -53,6 +53,14 @@ public class Num implements Comparable<Num> {
 			x = x / base;
 		}
 	}
+	
+	private boolean isZero() {
+		for(Long l : this.value) {
+			if(l != 0)
+				return false;
+		}
+		return true;
+	}
 
 	static Num add(Num a, Num b) {
 		LinkedList<Long> res;
@@ -193,8 +201,58 @@ public class Num implements Comparable<Num> {
 
 	/* Start of Level 2 */
 	static Num divide(Num a, Num b) {
-
+		if(b.isZero()){
+			//TODO throw excetption 
+		}
+		
+		if(a.compareTo(b) < 0)
+			return new Num(0);
+		
+		LinkedList<Long> res = new LinkedList<Long>();
+		
+		LinkedList<Long> cloneAList = new LinkedList<Long>(a.value);
+		
+		res = divide(new Num(1), new Num(cloneAList,false), a, b);
+		
 		return null;
+	}
+	
+	private static LinkedList<Long> divide(Num start, Num end, Num dividend, Num divisor) {
+		LinkedList<Long> mid = DivideByTwo(add(start,end).value);
+		LinkedList<Long> midPlusOne = new LinkedList(mid);
+		Long midLeastSign = midPlusOne.removeFirst();
+		midLeastSign++;
+		midPlusOne.addFirst(midLeastSign);
+		
+		Num midNum = new Num(mid, false);
+		Num midNumPlusOne = new Num(midPlusOne, false);
+		
+		Num productLeft = product(midNum, divisor);
+		Num productRight = product(midNumPlusOne, divisor);
+		
+		int leftCompare = productLeft.compareTo(dividend); 
+		int rightCompare = productRight.compareTo(dividend);
+		
+		if(leftCompare < -1 && rightCompare > 1) {
+			return midNum.value;
+		}
+		
+		if(leftCompare < -1 && rightCompare < -1)
+			return divide(midNumPlusOne, end, dividend, divisor);
+		
+		if(leftCompare > 1 && rightCompare > 1)
+			return divide(start, midNumPlusOne, dividend, divisor);
+		
+		return null;
+	}
+	
+	private static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
+
+		Long mostSign = a.removeLast();
+		mostSign /= 2;
+		
+		a.addLast(mostSign);
+		return a;
 	}
 
 	static Num mod(Num a, Num b) {
