@@ -10,20 +10,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TopologicalOrder2 {
-	
+
 	/**
-	 * @param g - Graph to be processes
+	 * @param g
+	 *            - Graph to be processes
 	 * @return - List of vertices in the topological order
 	 */
 	public static List<Graph.Vertex> topologicalOrder2(Graph g) {
-		
+
 		Iterator<Graph.Vertex> itOrder = g.iterator();
 		DFS dfsTrav = new DFS(g);
 		dfsTrav.dfs(itOrder);
-		
-		if(!dfsTrav.isDAG)
+
+		if (!dfsTrav.isDAG)
 			return null;
-		
+
 		return dfsTrav.decFinList;
 	}
 }
