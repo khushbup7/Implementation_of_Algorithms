@@ -27,6 +27,7 @@ public class Num implements Comparable<Num> {
 
 	/* Start of Level 1 */
 	Num(String s) {
+
 		if (s.lastIndexOf('-') >= 0) {
 			sign = true;
 			s = s.replace("-", "");
@@ -37,6 +38,8 @@ public class Num implements Comparable<Num> {
 			tempStr.append(s.charAt(i));
 			value.addFirst(Long.valueOf(tempStr.toString()));
 		}
+		
+		removeLeadingZeros(this);
 	}
 
 	Num(long x) {
@@ -135,39 +138,48 @@ public class Num implements Comparable<Num> {
 
 	// Implement Karatsuba algorithm for excellence credit
 	static Num product(Num a, Num b) {
-
-		if (a.toString().length() < 2 || b.toString().length() < 2) {
+		
+		Num res = Karatsuba(a, b);
+		res.sign = a.sign ^ b.sign;
+		
+		return res;
+	}
+	
+	private static Num Karatsuba(Num a, Num b) {
+		
+		String aStr = a.toString();
+		String bStr = b.toString();
+		
+		if (aStr.length() < 2 || bStr.length() < 2) {
 			return new Num(Long.parseLong(a.toString()) * Long.parseLong(b.toString()));
 		}
 
-		long m = Math.max(a.value.size(), b.value.size());
+		long m = Math.min(a.value.size(), b.value.size());
 		long k = m / 2;
 
-		String aStr = a.toString();
-		String bStr = b.toString();
-
 		Num aHigh = new Num(aStr.substring(0, aStr.length() - (int) k));
-
 		Num aLow = new Num(aStr.substring(aStr.length() - (int) k));
 		Num bHigh = new Num(bStr.substring(0, bStr.length() - (int) k));
 		Num bLow = new Num(bStr.substring(bStr.length() - (int) k));
 
-		Num z0 = product(aLow, bLow);
-		Num z1 = product(add(aLow, aHigh), add(bLow, bHigh));
-		Num z2 = product(aHigh, bHigh);
+		Num z0 = Karatsuba(aLow, bLow);
+		Num z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
+		Num z2 = Karatsuba(aHigh, bHigh);
 
 		Num temp = subtract(subtract(z1, z2), z0);
 		
-		Num res = add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
-		res.sign = a.sign ^ b.sign;
-
-		return res;
+		return add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
 	}
 
 	// Use divide and conquer
 	static Num power(Num a, long n) {
 
 		Num res = new Num();
+		if(n%2 == 0)
+			res.sign = false;
+		else
+			res.sign = a.sign;
+		
 		if (n == 0)
 			return new Num(1);
 		else if (n == 1)
@@ -178,7 +190,7 @@ public class Num implements Comparable<Num> {
 		if (n % 2 == 0)
 			return product(res, res);
 		else
-			return product(a, product(res, res));
+			return product(product(res, res),a);
 
 	}
 
@@ -203,18 +215,46 @@ public class Num implements Comparable<Num> {
 
 	// Use divide and conquer
 	static Num power(Num a, Num n) {
-
-		// TODO do edge/base cases
-
+		
+		Num res = new Num();
+		
+		LinkedList<Long> pList = new LinkedList<Long>(n.value);
+		boolean pSign = n.sign;
+		Num nPower = new Num(pList, pSign);
+		
+		if(isEven(nPower))
+			res.sign = false;
+		else
+			res.sign = a.sign;
+	
+		res = pow(a,nPower);
+		
+		return res;
+	}
+	
+	
+	private static Num pow(Num a, Num n) {
+		
 		if (n.value.size() == 0)
 			return new Num(1);
-
-		Num res = new Num();
-
+		
 		long leastSigDig = n.value.removeFirst();
-		res = product(power(power(a, n), base), power(a, leastSigDig));
-
-		return res;
+		
+		return product(power(pow(a, n), base), power(a, leastSigDig));
+	}
+	
+	private static boolean isEven(Num n) {
+		if(base%2 == 0) {
+			System.out.println(n.value.getFirst());
+			return n.value.getFirst()%2 == 0 ? true : false;
+		}
+		else {
+			long sum = 0;
+			for(Long a : n.value)
+				sum += a;
+			System.out.println(sum);
+			return sum%2 == 0 ? true : false;
+		}
 	}
 
 	static Num squareRoot(Num a) {
@@ -282,6 +322,20 @@ public class Num implements Comparable<Num> {
 		}
 
 		return sb.toString();
+	}
+	
+    static void removeLeadingZeros(Num a) {
+		Stack<Long> valStack = new Stack<Long>();
+		
+		while(!a.value.isEmpty())
+			valStack.push(a.value.removeFirst());
+		
+		while(valStack.peek() == 0) 
+			valStack.pop();
+		
+		while(!valStack.isEmpty())
+			a.value.addFirst(valStack.pop());
+
 	}
 
 	public long base() {
