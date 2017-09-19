@@ -139,6 +139,17 @@ public class Num implements Comparable<Num> {
 
 	// Implement Karatsuba algorithm for excellence credit
 	static Num product(Num a, Num b) {
+		
+		int s = Math.max(a.value.size(),b.value.size());
+		
+		if(s == a.value.size()) {
+			for(int i = 0;i<s-b.value.size();i++)
+				b.value.addLast((long)0);
+		}
+		else {
+			for(int i = 0;i<s-a.value.size();i++)
+				a.value.addLast((long)0);
+		}
 
 		Num res = Karatsuba(a, b);
 		res.sign = a.sign ^ b.sign;

@@ -5,10 +5,10 @@ package cs6301.g39;
 
 public class LP1L1 {
     public static void main(String[] args) throws Exception{
-	Num x = new Num("-14");
-	Num y = new Num("10");
+	Num x = new Num("125468231215468461232");
+	Num y = new Num("877");
 	
-	System.out.println(Num.squareRoot(y));
+	System.out.println(Num.divide(x,y));
 	}
 }
 
