@@ -163,7 +163,7 @@ public class Num implements Comparable<Num> {
 		String bStr = toString(b.value);
 
 		if (aStr.length() < 2 || bStr.length() < 2) {
-			return new Num(Long.parseLong(a.toString()) * Long.parseLong(b.toString()));
+			return new Num(Long.parseLong(aStr) * Long.parseLong(bStr));
 		}
 
 		long m = Math.min(a.value.size(), b.value.size());
@@ -435,17 +435,24 @@ public class Num implements Comparable<Num> {
 		return a;
 	}
 
-	private static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
-		Long mostSign = a.removeLast();
-		if (mostSign < 2) {
-			mostSign = mostSign * base + a.removeLast();
-			mostSign /= 2;
-			a.addLast(Long.parseLong(mostSign.toString(), base));
-			return a;
+	public static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
+		
+		LinkedList<Long> res = new LinkedList<Long>();
+		
+		Stack<Long> valStack = new Stack<Long>();
+		for (Long l : a)
+			valStack.push(l);
+		
+		Long carry = (long)0;
+		while(!valStack.isEmpty()) {
+			Long l = valStack.pop();
+			
+			long div = carry * base + l;
+			carry = div % 2;
+			res.addFirst(div/2);
+		
 		}
-		mostSign /= 2;
-		a.addLast(mostSign);
-		return a;
+		return res;
 	}
 
 	private static boolean isEven(Num n) {
@@ -468,10 +475,8 @@ public class Num implements Comparable<Num> {
 		midNum.removeLeadingZeros();
 
 		LinkedList<Long> midPlusOne = new LinkedList<Long>(midNum.value);
-		Long midLeastSign = midPlusOne.removeFirst();
-		midLeastSign++;
-		midPlusOne.addFirst(midLeastSign);
 		Num midNumPlusOne = new Num(midPlusOne, false);
+		midNumPlusOne = add(midNumPlusOne, new Num(1));
 		
 		res.add(midNum);
 		res.add(midNumPlusOne);
