@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Tokenizer {
 
-	static ArrayList<Character> operatorList = new ArrayList<>(Arrays.asList('+', '-', '*', '/', '!', '^', '(', ')'));
+	static ArrayList<Character> operatorList = new ArrayList<>(Arrays.asList('+', '-', '*', '/', '^', '%', '|'));
 
 	/**
 	 * @param expr
@@ -25,9 +25,12 @@ public class Tokenizer {
 		List<Token<?>> t = new LinkedList<Token<?>>();
 
 		for (int i = 0; i < expr.length();) {
+			
+			if(expr.charAt(i) == ';')
+				break;
 
 			// If a token is a white space
-			if (expr.charAt(i) == ' ')
+			else if (expr.charAt(i) == ' ')
 				i++;
 
 			// If a token is an operator, add it to the list of tokens
@@ -43,7 +46,6 @@ public class Tokenizer {
 				String temp = getOperand(expr, i);
 				// if an operand is a number
 				if (isNumeric(temp)) {
-					// TODO differentiate between int and double
 					Token<Double> tok = new Token<Double>(Double.valueOf(temp));
 					tok.isOperator = false;
 					t.add(tok);
@@ -87,7 +89,7 @@ public class Tokenizer {
 	 * @return - if the string is number or not
 	 */
 	public static boolean isNumeric(String str) {
-		return str != null && str.matches("[-+]?\\d*\\.?\\d+");
+		return str != null && (str.matches("0") || str.matches("[1-9][0-9]*"));
 	}
 
 }
