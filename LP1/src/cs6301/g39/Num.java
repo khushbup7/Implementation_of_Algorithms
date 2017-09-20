@@ -18,7 +18,7 @@ public class Num implements Comparable<Num> {
 	boolean sign = false;
 
 	// Constructors
-	private Num() {
+	Num() {
 	}
 
 	private Num(LinkedList<Long> value, boolean sign) {
@@ -477,5 +477,4 @@ public class Num implements Comparable<Num> {
 		res.add(midNumPlusOne);
 		return res;
 	}
-
 }
