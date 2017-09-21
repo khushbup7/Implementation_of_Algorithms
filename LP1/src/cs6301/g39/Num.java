@@ -1,7 +1,11 @@
 // Starter code for lp1.
-
 // Change following line to your group number
 // Changed type of base to long: 1:15 PM, 2017-09-08.
+
+/** Num class with all the basic arithmetic operations for Big Integers
+ * @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ * Ver 1.0: 2017/09/13 Initial class
+ */
 package cs6301.g39;
 
 import java.util.Iterator;
@@ -11,36 +15,45 @@ import java.util.Stack;
 
 public class Num implements Comparable<Num> {
 
-	static int defaultBase = 10; // This can be changed to what you want it to
+	static long defaultBase = 10; // This can be changed to what you want it to
 									// be.
-	static int base = defaultBase; // Change as needed
+	static long base = defaultBase; // Change as needed
 	LinkedList<Long> value = new LinkedList<Long>();
-	boolean sign = false;
+	boolean sign = false; // true indicates number is negative, false indicates
+							// number is false
 
 	// Constructors
+	/**
+	 * Constructor to initialize blank Num
+	 */
 	Num() {
 	}
 
+	/**
+	 * @param value
+	 *            - Linked list of value to represent the Number
+	 * @param sign
+	 *            - boolean value for sign
+	 */
 	private Num(LinkedList<Long> value, boolean sign) {
 		this.value = value;
 		this.sign = sign;
 	}
 
 	/* Start of Level 1 */
+
 	Num(String s) {
 
 		if (s.lastIndexOf('-') >= 0) {
 			sign = true;
 			s = s.replace("-", "");
 		}
-
-		for (int i = 0; i < s.length(); i++) {
-			StringBuilder tempStr = new StringBuilder();
-			tempStr.append(s.charAt(i));
-			value.addFirst(Long.valueOf(tempStr.toString()));
+		Num res = new Num(Character.getNumericValue(s.charAt(0)));
+		Num baseNum = new Num(10);
+		for (int i = 1; i < s.length(); i++) {
+			res = add(product(res, baseNum), new Num(Character.getNumericValue(s.charAt(i))));
 		}
-
-		this.removeLeadingZeros();
+		value = res.value;
 	}
 
 	Num(long x) {
@@ -58,6 +71,7 @@ public class Num implements Comparable<Num> {
 		}
 	}
 
+	// Addition
 	static Num add(Num a, Num b) {
 		LinkedList<Long> res;
 		int sign = a.sign ? -1 : 1;
@@ -77,6 +91,14 @@ public class Num implements Comparable<Num> {
 
 	}
 
+	// Addition Helper
+	/**
+	 * @param a
+	 *            - LinkedList of values of number 1
+	 * @param b
+	 *            - LinkedList of values of number 2
+	 * @return - LinkedList of values of number 1 + number 2
+	 */
 	static LinkedList<Long> add(List<Long> a, List<Long> b) {
 		long carry = 0;
 		long sum = 0;
@@ -112,6 +134,14 @@ public class Num implements Comparable<Num> {
 		return new Num(res, resSign);
 	}
 
+	// Subtract Helper
+	/**
+	 * @param a
+	 *            - LinkedList of values of number 1
+	 * @param b
+	 *            - LinkedList of values of number 2
+	 * @return - LinkedList of values of number 1 - number 2
+	 */
 	static LinkedList<Long> subtract(List<Long> a, List<Long> b) {
 		LinkedList<Long> result = new LinkedList<Long>();
 
@@ -139,46 +169,63 @@ public class Num implements Comparable<Num> {
 
 	// Implement Karatsuba algorithm for excellence credit
 	static Num product(Num a, Num b) {
-		
-		int s = Math.max(a.value.size(),b.value.size());
-		
-		if(s == a.value.size()) {
-			for(int i = 0;i<s-b.value.size();i++)
-				b.value.addLast((long)0);
-		}
-		else {
-			for(int i = 0;i<s-a.value.size();i++)
-				a.value.addLast((long)0);
+
+		int aSize = a.value.size();
+		int bSize = b.value.size();
+		int s = Math.max(aSize, bSize);
+		if (s == aSize) {
+			for (int i = 0; i < s - bSize; i++)
+				b.value.addLast((long) 0);
+		} else {
+			for (int i = 0; i < s - aSize; i++)
+				a.value.addLast((long) 0);
 		}
 
-		Num res = Karatsuba(a, b);
-		res.sign = a.sign ^ b.sign;
+		LinkedList<Long> res = Karatsuba(a.value, b.value);
 
-		return res;
+		return new Num(res, a.sign ^ b.sign);
 	}
 
-	private static Num Karatsuba(Num a, Num b) {
+	// Multiplication Helper - Uses Karatsuba
+	/**
+	 * @param a
+	 *            - LinkedList of values of number 1
+	 * @param b
+	 *            - LinkedList of values of number 2
+	 * @return - LinkedList of values of number 1 * number 2
+	 */
+	private static LinkedList<Long> Karatsuba(LinkedList<Long> a, LinkedList<Long> b) {
 
-		String aStr = toString(a.value);
-		String bStr = toString(b.value);
-
-		if (aStr.length() < 2 || bStr.length() < 2) {
-			return new Num(Long.parseLong(aStr) * Long.parseLong(bStr));
+		if (a.size() < 2 || b.size() < 2) {
+			LinkedList<Long> resTemp = new LinkedList<Long>();
+			Num n = new Num(Long.parseLong(toString(a)) * Long.parseLong(toString(b)));
+			resTemp.addAll(n.value);
+			return resTemp;
 		}
 
-		long m = Math.min(a.value.size(), b.value.size());
+		long m = Math.min(a.size(), b.size());
 		long k = m / 2;
 
-		Num aHigh = new Num(aStr.substring(0, aStr.length() - (int) k));
-		Num aLow = new Num(aStr.substring(aStr.length() - (int) k));
-		Num bHigh = new Num(bStr.substring(0, bStr.length() - (int) k));
-		Num bLow = new Num(bStr.substring(bStr.length() - (int) k));
+		LinkedList<Long> aHigh = new LinkedList<Long>();
+		LinkedList<Long> aLow = new LinkedList<Long>();
+		LinkedList<Long> bHigh = new LinkedList<Long>();
+		LinkedList<Long> bLow = new LinkedList<Long>();
 
-		Num z0 = Karatsuba(aLow, bLow);
-		Num z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
-		Num z2 = Karatsuba(aHigh, bHigh);
+		for (int i = 0; i < a.size(); i++) {
+			if (i < k) {
+				aLow.add(a.get(i));
+				bLow.add(b.get(i));
+			} else {
+				aHigh.add(a.get(i));
+				bHigh.add(b.get(i));
+			}
+		}
 
-		Num temp = subtract(subtract(z1, z2), z0);
+		LinkedList<Long> z0 = Karatsuba(aLow, bLow);
+		LinkedList<Long> z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
+		LinkedList<Long> z2 = Karatsuba(aHigh, bHigh);
+
+		LinkedList<Long> temp = subtract(subtract(z1, z2), z0);
 
 		return add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
 	}
@@ -231,9 +278,22 @@ public class Num implements Comparable<Num> {
 		return new Num(res, resSign);
 	}
 
+	/**
+	 * Divide by binary search
+	 * 
+	 * @param start
+	 *            - start number for the binary search interval
+	 * @param end
+	 *            - end number for the binary search interval
+	 * @param dividend
+	 *            - Number tp be divided
+	 * @param divisor
+	 *            - Divisor
+	 * @return
+	 */
 	private static LinkedList<Long> divide(Num start, Num end, Num dividend, Num divisor) {
 		LinkedList<Num> middleNumbers = getMiddleNumbers(start, end);
-		
+
 		Num productLeft = product(middleNumbers.getFirst(), divisor);
 		Num productRight = product(middleNumbers.getLast(), divisor);
 
@@ -262,6 +322,13 @@ public class Num implements Comparable<Num> {
 	}
 
 	// Use divide and conquer
+	/**
+	 * @param a
+	 *            Base
+	 * @param n
+	 *            Exponent
+	 * @return - Power(Base, Coefficent)
+	 */
 	static Num power(Num a, Num n) {
 
 		Num res = new Num();
@@ -280,6 +347,15 @@ public class Num implements Comparable<Num> {
 		return res;
 	}
 
+	/**
+	 * Returns magnitude for Power function above
+	 * 
+	 * @param a
+	 *            Base
+	 * @param n
+	 *            Exponent
+	 * @return Power(Base, Exponent)
+	 */
 	private static Num pow(Num a, Num n) {
 
 		if (n.value.size() == 0)
@@ -290,6 +366,7 @@ public class Num implements Comparable<Num> {
 		return product(power(pow(a, n), base), power(a, leastSigDig));
 	}
 
+	// SquareRoot
 	static Num squareRoot(Num a) {
 		if (a.isZero()) {
 			return new Num(0);
@@ -301,7 +378,18 @@ public class Num implements Comparable<Num> {
 		return new Num(res, false);
 	}
 
-	static LinkedList<Long> squareRoot(Num start, Num end, Num a) {
+	/**
+	 * Square root by binary search
+	 * 
+	 * @param start
+	 *            - start number for the binary search
+	 * @param end
+	 *            - end number for the binary search
+	 * @param a
+	 *            - given Number
+	 * @return - LinkedList for the squareroot value
+	 */
+	static private LinkedList<Long> squareRoot(Num start, Num end, Num a) {
 		LinkedList<Num> middleNumbers = getMiddleNumbers(start, end);
 
 		Num productLeft = product(middleNumbers.getFirst(), middleNumbers.getFirst());
@@ -337,6 +425,13 @@ public class Num implements Comparable<Num> {
 		return (sign == othersign ? sign * mag : (sign > othersign ? 1 : -1));
 	}
 
+	/**
+	 * @param a
+	 *            - LinkedList of values for Number a
+	 * @param b
+	 *            - LinkedList of values for Number b
+	 * @return - int -1, 0, 1 for negative, equal and positive
+	 */
 	private static int compareMagnitude(LinkedList<Long> a, LinkedList<Long> b) {
 		if (a.size() < b.size())
 			return -1;
@@ -362,6 +457,7 @@ public class Num implements Comparable<Num> {
 	// For example, if base=100, and the number stored corresponds to 10965,
 	// then the output is "100: 65 9 1"
 	void printList() {
+		this.removeLeadingZeros();
 		System.out.print(base + " :");
 		for (Long l : value)
 			System.out.print(" " + l);
@@ -374,10 +470,15 @@ public class Num implements Comparable<Num> {
 		if (sign)
 			sb.append("-");
 
-		sb.append(toString(this.value));
+		sb.append(toString(value));
 		return sb.toString();
 	}
 
+	/**
+	 * @param l1
+	 *            - LinkedList to be converted to String
+	 * @return - String of values in the LinkedList
+	 */
 	public static String toString(LinkedList<Long> l1) {
 		StringBuilder sb = new StringBuilder();
 		Stack<Long> valStack = new Stack<Long>();
@@ -392,6 +493,9 @@ public class Num implements Comparable<Num> {
 		return sb.toString();
 	}
 
+	/**
+	 * Removes leading zeros in the value of this Number
+	 */
 	void removeLeadingZeros() {
 		Stack<Long> valStack = new Stack<Long>();
 
@@ -414,11 +518,19 @@ public class Num implements Comparable<Num> {
 	public long base() {
 		return base;
 	}
-	
+
+	/**
+	 * @param it
+	 *            - iterator of the list
+	 * @return - next value in the list
+	 */
 	public static long next(Iterator<Long> it) {
 		return it.hasNext() ? it.next() : 0;
 	}
 
+	/**
+	 * @return returns if the number is zero
+	 */
 	private boolean isZero() {
 		for (Long l : this.value) {
 			if (l != 0)
@@ -427,34 +539,56 @@ public class Num implements Comparable<Num> {
 		return true;
 	}
 
-	// Shift operation
-	static Num shift(Num a, long n) {
+	/**
+	 * Shift operation for Karatsuba
+	 * 
+	 * @param a
+	 *            - LinkedList in which numbers need to be shifted
+	 * @param n
+	 *            - shift by n
+	 * @return - new List of Numbers with the shift
+	 */
+	static LinkedList<Long> shift(LinkedList<Long> a, long n) {
 		for (int i = 0; i < n; i++) {
-			a.value.addFirst((long) 0);
+			a.addFirst((long) 0);
 		}
 		return a;
 	}
 
-	public static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
-		
+	/**
+	 * Divide the given number ny two
+	 * 
+	 * @param a
+	 *            - LinkedList of the number to be divided
+	 * @return - LinkedList of the resulting number
+	 */
+	private static LinkedList<Long> DivideByTwo(LinkedList<Long> a) {
+
 		LinkedList<Long> res = new LinkedList<Long>();
-		
+
 		Stack<Long> valStack = new Stack<Long>();
 		for (Long l : a)
 			valStack.push(l);
-		
-		Long carry = (long)0;
-		while(!valStack.isEmpty()) {
+
+		Long carry = (long) 0;
+		while (!valStack.isEmpty()) {
 			Long l = valStack.pop();
-			
+
 			long div = carry * base + l;
 			carry = div % 2;
-			res.addFirst(div/2);
-		
+			res.addFirst(div / 2);
+
 		}
 		return res;
 	}
 
+	/**
+	 * Checks if the number is even number
+	 * 
+	 * @param n
+	 *            - Number to be checked
+	 * @return - true if even, false otherwise
+	 */
 	private static boolean isEven(Num n) {
 		if (base % 2 == 0) {
 			System.out.println(n.value.getFirst());
@@ -467,7 +601,16 @@ public class Num implements Comparable<Num> {
 			return sum % 2 == 0 ? true : false;
 		}
 	}
-	
+
+	/**
+	 * Returens the middle two numbers between the start and the end number
+	 * 
+	 * @param start
+	 *            - starting number
+	 * @param end
+	 *            - end number
+	 * @return - List of two Numbers
+	 */
 	private static LinkedList<Num> getMiddleNumbers(Num start, Num end) {
 		LinkedList<Num> res = new LinkedList<Num>();
 		LinkedList<Long> mid = DivideByTwo(add(start, end).value);
@@ -477,9 +620,10 @@ public class Num implements Comparable<Num> {
 		LinkedList<Long> midPlusOne = new LinkedList<Long>(midNum.value);
 		Num midNumPlusOne = new Num(midPlusOne, false);
 		midNumPlusOne = add(midNumPlusOne, new Num(1));
-		
+
 		res.add(midNum);
 		res.add(midNumPlusOne);
 		return res;
 	}
+
 }
