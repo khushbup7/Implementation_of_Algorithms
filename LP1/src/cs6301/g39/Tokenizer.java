@@ -1,6 +1,7 @@
 /** Tokenizer class for parsing/tokenizing the given arithmetic expression into tokens.
  *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
  *  Ver 1.0: 2017/09/08 
+ *  Ver 1.1: 2017/09/19
  *  Usage: Tokenizer.tokenize(expr)
  */
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class Tokenizer {
 
-	static ArrayList<Character> operatorList = new ArrayList<>(Arrays.asList('+', '-', '*', '/', '^', '%', '|'));
+	static ArrayList<Character> operatorList = new ArrayList<>(Arrays.asList('+', '-', '*', '/', '^', '%', '|','!','(',')'));
 
 	/**
 	 * @param expr
