@@ -18,7 +18,7 @@ public class MergeSort {
 	 */
 	static void mergeSort(int[] arr, int[] tmp) {
 
-		mergeSortDivide(arr, 0, arr.length - 1, tmp);
+		mergeSort(arr, 0, arr.length - 1, tmp);
 	}
 
 	/**
@@ -33,13 +33,13 @@ public class MergeSort {
 	 * @param tmp
 	 *            - Given array to store temporary values
 	 */
-	static void mergeSortDivide(int[] arr, int left, int right, int[] tmp) {
+	static void mergeSort(int[] arr, int left, int right, int[] tmp) {
 
 		if (left < right) {
 			int mid = (left + right) / 2; // find middle index
-			mergeSortDivide(arr, left, mid, tmp); // merge sort on the first
+			mergeSort(arr, left, mid, tmp); // merge sort on the first
 													// half of the array
-			mergeSortDivide(arr, mid + 1, right, tmp); // merge sort on the
+			mergeSort(arr, mid + 1, right, tmp); // merge sort on the
 														// second half of the
 														// array
 			merge(arr, left, mid, right, tmp); // merge first and second half of
