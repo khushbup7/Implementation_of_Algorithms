@@ -195,9 +195,11 @@ public class Num implements Comparable<Num> {
         if (s == aSize) {
             for (int i = 0; i < s - bSize; i++)
                 b.addLast((long) 0);
+            	bSize = b.size();
         } else {
             for (int i = 0; i < s - aSize; i++)
                 a.addLast((long) 0);
+            	aSize = a.size();
         }
 
 		if (aSize < 2 || bSize < 2) {
@@ -489,10 +491,7 @@ public class Num implements Comparable<Num> {
 			sb.append("-");
 		
 		String valueString = toString(this.value); 
-		System.out.println(value.toString());
-		System.out.println(valueString);
 		sb.append(valueString);
-		System.out.println(sb.toString());
 		return sb.toString();
 	}
 
@@ -512,7 +511,6 @@ public class Num implements Comparable<Num> {
 			sb.append(valStack.pop().toString());
 		}
 
-		System.out.println("Hi:" + sb.toString());
 		return sb.toString();
 	}
 
