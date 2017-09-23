@@ -3,6 +3,11 @@
 package cs6301.g00;
 
 import java.util.List;
+
+import cs6301.g00.Graph.Edge;
+//import cs6301.g39.Graph;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
@@ -15,11 +20,13 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 		List<Graph.Edge> unprocessed_edges;
 		List<List<Graph.Edge>> subTour; // sub tour from this edge
 
-		//maintains the visited edges- to be compared with graph vertex adj list for which next edge should be taken
 		EulerVertex(Graph.Vertex u) {
-			unprocessed_edges = new LinkedList<>();
-			subTour = new LinkedList<>();// pass this as parameter in find tour helper to maintain subtour from that vertex
+			unprocessed_edges = new LinkedList<>(u.adj);// copy from adj
+			subTour = new LinkedList<>();
 		}
+
+		public Iterator<Edge> iterator() { return unprocessed_edges.iterator(); }
+
 	}
 
 	// Constructor
@@ -38,7 +45,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
 	}
 
-	// To do: function to find an Euler tour
 	public List<Graph.Edge> findEulerTour() {
 		findTours();
 		if(VERBOSE > 9) { printTours(); }
@@ -46,12 +52,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 		return tour;
 	}
 
-	/* To do: test if the graph is Eulerian.
-	 * If the graph is not Eulerian, it prints the message:
-	 * "Graph is not Eulerian" and one reason why, such as
-	 * "inDegree = 5, outDegree = 3 at Vertex 37" or
-	 * "Graph is not strongly connected"
-	 */
 	boolean isEulerian() {
 		//new - add the sCC class and check if number of components  == 1
 		int scc = 1;
@@ -60,7 +60,7 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 			System.out.println("Reason: Graph is not strongly connected");
 			return false;	
 		}
-		// checks indegree is equal to outdegree
+		// checks in-degree is equal to out-degree
 		for(Graph.Vertex u : g){
 			if(u.adj.size() != u.revAdj.size()){
 				System.out.println("Graph is not Eulerian");
@@ -74,30 +74,56 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
 	// Find tours starting at vertices with unexplored edges
 	void findTours() {
-		// new - will call find tour helper or overloaded method
-		//Iterate vertices of Graph for(Grpah.vertex u: g)
-		//new- in while loop can find the unexplored edges by comparing the size of graph.Vertex and corresponding EulerVertex visited list
-	}
-	
-	void findTours( Graph.Vertex start, List<Graph.Edge> tour){
-		// check with trial if GraphVertex or EulerVertex needs to be passed
-		
-		//new- in while loop can find the unexplored edges of u by comparing the size of graph.Vertex and corresponding EulerVertex visited list
-		// create graph edge object = assign the current edge
-		// add the new edge object to Euler vertex of start- subtour list
+
+		for(Graph.Vertex u : g){
+			if(getVertex(u).unprocessed_edges.size() > 0)
+				findTours(u);
+		}
+
+		printTours();
 	}
 
-	/* Print tours found by findTours() using following format:
-	 * Start vertex of tour: list of edges with no separators
-	 * Example: lp2-in1.txt, with start vertex 3, following tours may be found.
-	 * 3: (3,1)(1,2)(2,3)(3,4)(4,5)(5,6)(6,3)
-	 * 4: (4,7)(7,8)(8,4)
-	 * 5: (5,7)(7,9)(9,5)
-	 *
-	 * Just use System.out.print(u) and System.out.print(e)
-	 */
-	void printTours() {
+	void findTours( Graph.Vertex start){
+		Graph.Vertex u = start;
+		Graph.Vertex v = start;
+		List<Graph.Edge> subtourlist = new LinkedList<>();
+		Graph.Edge e;
+		boolean flag = true;
+		do{
+			flag = false;
+			Iterator<Graph.Edge> it = getVertex(u).iterator();
+			while (it.hasNext()) {
+				flag = true;
+				e = it.next();
+				subtourlist.add(e);
+				getVertex(u).unprocessed_edges.remove(0);
+				v = e.otherEnd(u);
+				break;
+
+			}
+			u = v;
+		}while(flag);
+		getVertex(start).subTour.add(subtourlist);
 	}
+
+	void printTours() {
+		for(Graph.Vertex u : g){
+			//print tours starting from each vertex
+			printTours(u);
+		}
+	}
+
+	void printTours(Graph.Vertex start) {
+		EulerVertex eu = getVertex(start);
+		System.out.print(start.toString() + " :");
+		for(List<Graph.Edge> l : eu.subTour){
+			for(Graph.Edge e : l){
+				System.out.print(e);
+			}
+		}
+		System.out.println("");
+	}
+
 
 	// Stitch tours into a single tour using the algorithm discussed in class
 	void stitchTours() {
