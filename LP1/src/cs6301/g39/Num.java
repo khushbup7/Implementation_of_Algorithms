@@ -15,7 +15,7 @@ import java.util.Stack;
 
 public class Num implements Comparable<Num> {
 
-	static long defaultBase = 10; // This can be changed to what you want it to
+	static long defaultBase = 32; // This can be changed to what you want it to
 									// be.
 	static long base = defaultBase; // Change as needed
 	LinkedList<Long> value = new LinkedList<Long>();
@@ -49,12 +49,12 @@ public class Num implements Comparable<Num> {
 			s = s.replace("-", "");
 		}
 
-		for (int i = 0; i < s.length(); i++) {
-			StringBuilder tempStr = new StringBuilder();
-			tempStr.append(s.charAt(i));
-			value.addFirst(Long.valueOf(tempStr.toString()));
+		Num res = new Num(Character.getNumericValue(s.charAt(0)));
+		Num baseNum = new Num(10);
+		for (int i = 1; i < s.length(); i++) {
+			res = add(product(res, baseNum), new Num(Character.getNumericValue(s.charAt(i))));
 		}
-
+		this.value = res.value;
 		removeLeadingZeros(value);
 	}
 
@@ -171,13 +171,13 @@ public class Num implements Comparable<Num> {
 
 	// Implement Karatsuba algorithm for excellence credit
 	static Num product(Num a, Num b) {
-    
+
 		LinkedList<Long> res = Karatsuba(a.value, b.value);
-	//	res.sign = a.sign ^ b.sign;
-		
+		// res.sign = a.sign ^ b.sign;
+
 		removeLeadingZeros(res);
 		return new Num(res, a.sign ^ b.sign);
-		//return res;
+		// return res;
 	}
 
 	// Multiplication Helper - Uses Karatsuba
@@ -189,64 +189,49 @@ public class Num implements Comparable<Num> {
 	 * @return - LinkedList of values of number 1 * number 2
 	 */
 	private static LinkedList<Long> Karatsuba(LinkedList<Long> a, LinkedList<Long> b) {
-		
+
 		int aSize = a.size();
-        int bSize = b.size();
-        int s = Math.max(aSize, bSize);
-        if (s == aSize) {
-            for (int i = 0; i < s - bSize; i++)
-                b.addLast((long) 0);
-            	bSize = b.size();
-        } else {
-            for (int i = 0; i < s - aSize; i++)
-                a.addLast((long) 0);
-            	aSize = a.size();
-        }
+		int bSize = b.size();
+		int s = Math.max(aSize, bSize);
+		if (s == aSize) {
+			for (int i = 0; i < s - bSize; i++)
+				b.addLast((long) 0);
+			bSize = b.size();
+		} else {
+			for (int i = 0; i < s - aSize; i++)
+				a.addLast((long) 0);
+			aSize = a.size();
+		}
 
 		if (aSize < 2 || bSize < 2) {
-			 LinkedList<Long> resTemp = new LinkedList<Long>();
-			 Num n = new Num(Long.parseLong(toString(a)) * Long.parseLong(toString(b)));
-			 resTemp.addAll(n.value);
-			 return resTemp;
+			LinkedList<Long> resTemp = new LinkedList<Long>();
+			Num n = new Num(Long.parseLong(toString(a)) * Long.parseLong(toString(b)));
+			resTemp.addAll(n.value);
+			return resTemp;
 		}
 
 		long m = Math.min(a.size(), b.size());
 		long k = m / 2;
-		
+
 		LinkedList<Long> aHigh = new LinkedList<Long>();
 		LinkedList<Long> aLow = new LinkedList<Long>();
 		LinkedList<Long> bHigh = new LinkedList<Long>();
 		LinkedList<Long> bLow = new LinkedList<Long>();
-		
-		/*
-		Num aHigh = new Num(aStr.substring(0, aStr.length() - (int) k));
-		Num aLow = new Num(aStr.substring(aStr.length() - (int) k));
-		Num bHigh = new Num(bStr.substring(0, bStr.length() - (int) k));
-		Num bLow = new Num(bStr.substring(bStr.length() - (int) k));
-		*/
-		
+
 		for (int i = 0; i < a.size(); i++) {
-			 			if (i < k) {
-			 				aLow.add(a.get(i));
-			 				bLow.add(b.get(i));
-			 			} else {
-			 				aHigh.add(a.get(i));
-			 				bHigh.add(b.get(i));
-			 			}
-			 		}
-		
+			if (i < k) {
+				aLow.add(a.get(i));
+				bLow.add(b.get(i));
+			} else {
+				aHigh.add(a.get(i));
+				bHigh.add(b.get(i));
+			}
+		}
+
 		LinkedList<Long> z0 = Karatsuba(aLow, bLow);
 		LinkedList<Long> z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
 		LinkedList<Long> z2 = Karatsuba(aHigh, bHigh);
 		LinkedList<Long> temp = subtract(subtract(z1, z2), z0);
-
-		/*
-		Num z0 = Karatsuba(aLow, bLow);
-		Num z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
-		Num z2 = Karatsuba(aHigh, bHigh);
-		
-
-		Num temp = subtract(subtract(z1, z2), z0); */
 
 		return add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
 	}
@@ -295,7 +280,6 @@ public class Num implements Comparable<Num> {
 		}
 
 		res = divide(new Num(1), new Num(toString(a.value)), a, b);
-		System.out.println(res.toString());
 		return new Num(res, resSign);
 	}
 
@@ -317,7 +301,7 @@ public class Num implements Comparable<Num> {
 
 		Num productLeft = product(middleNumbers.getFirst(), divisor);
 		Num productRight = product(middleNumbers.getLast(), divisor);
-		
+
 		int leftCompare = compareMagnitude(productLeft.value, dividend.value);
 		int rightCompare = compareMagnitude(productRight.value, dividend.value);
 
@@ -334,6 +318,7 @@ public class Num implements Comparable<Num> {
 		return null;
 	}
 
+	// Modulo function
 	static Num mod(Num a, Num b) throws Exception {
 
 		Num aByB = divide(a, b);
@@ -439,7 +424,7 @@ public class Num implements Comparable<Num> {
 	// compare "this" to "other": return +1 if this is greater, 0 if equal, -1
 	// otherwise
 	public int compareTo(Num other) {
-		
+
 		removeLeadingZeros(this.value);
 		removeLeadingZeros(other.value);
 		int mag = compareMagnitude(this.value, other.value);
@@ -489,13 +474,46 @@ public class Num implements Comparable<Num> {
 
 	// Return number to a string in base 10
 	public String toString() {
-		removeLeadingZeros(this.value);
+
 		StringBuilder sb = new StringBuilder();
 		if (sign)
 			sb.append("-");
-		
-		String valueString = toString(this.value); 
-		sb.append(valueString);
+
+		sb.append(convertToBase10(this.value));
+
+		// String valueString = toString(this.value);
+		// sb.append(valueString);
+
+		return sb.toString();
+	}
+
+	/**
+	 * @param valueInBase
+	 *            LinkedList of value of Num to be converted to base 10
+	 * @return String of the value in base 10
+	 */
+	private String convertToBase10(LinkedList<Long> valueInBase) {
+		if (valueInBase.isEmpty())
+			return "";
+		long temp = base;
+		base = 10;
+
+		Stack<Long> st = new Stack<Long>();
+		for (Long l : valueInBase)
+			st.push(l);
+
+		Num res = new Num(st.pop());
+		Num baseNum = new Num(temp);
+		while (!st.isEmpty()) {
+			res = add(product(res, baseNum), new Num(st.pop()));
+		}
+		base = temp;
+		removeLeadingZeros(res.value);
+		StringBuilder sb = new StringBuilder();
+		Iterator<Long> it = res.value.descendingIterator();
+		while (it.hasNext())
+			sb.append(it.next());
+
 		return sb.toString();
 	}
 

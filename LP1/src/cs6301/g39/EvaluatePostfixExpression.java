@@ -79,15 +79,15 @@ public class EvaluatePostfixExpression {
 							break;
 						//"mod" operation
 						case "%":
-							operand1 = evalStack.pop();
 							operand2 = evalStack.pop();
+							operand1 = evalStack.pop();
 							res = Num.mod(operand1, operand2);
 							evalStack.push(res);
 							break;
 						//"power" operation
 						case "^":
-							operand1 = evalStack.pop();
 							operand2 = evalStack.pop();
+							operand1 = evalStack.pop();
 							res = Num.power(operand1, operand2);
 							evalStack.push(res);
 							break;

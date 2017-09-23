@@ -42,6 +42,7 @@ public class LP1L3 {
 			List<Token<?>> tokens = Tokenizer.tokenize(exprSplit[1]);
 			// Evaluating the postfix form of the expression
 			EvaluatePostfixExpression.evaluate(exprSplit[0], tokens);
+			System.out.println(EvaluatePostfixExpression.varLookup.get(currentVar).toString());
 		}
 		
 		//printing the value of the last variable that was assigned a value

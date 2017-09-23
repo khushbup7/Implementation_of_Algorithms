@@ -22,7 +22,7 @@ public class LP1L4 {
 		Scanner in;
 		if (args.length > 0) {
 			int base = Integer.parseInt(args[0]);
-			System.out.println(base);
+			Num.base = base;
 		}
 
 		in = new Scanner(System.in);
