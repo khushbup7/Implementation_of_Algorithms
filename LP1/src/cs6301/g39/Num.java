@@ -171,22 +171,12 @@ public class Num implements Comparable<Num> {
 
 	// Implement Karatsuba algorithm for excellence credit
 	static Num product(Num a, Num b) {
-        
-		int aSize = a.value.size();
-        int bSize = b.value.size();
-        int s = Math.max(aSize, bSize);
-        if (s == aSize) {
-            for (int i = 0; i < s - bSize; i++)
-                b.value.addLast((long) 0);
-        } else {
-            for (int i = 0; i < s - aSize; i++)
-                a.value.addLast((long) 0);
-        }
+    
+		LinkedList<Long> res = Karatsuba(a.value, b.value);
+	//	res.sign = a.sign ^ b.sign;
 
-		Num res = Karatsuba(a, b);
-		res.sign = a.sign ^ b.sign;
-
-		return res;
+		return new Num(res, a.sign ^ b.sign);
+		//return res;
 	}
 
 	// Multiplication Helper - Uses Karatsuba
@@ -197,28 +187,63 @@ public class Num implements Comparable<Num> {
 	 *            - LinkedList of values of number 2
 	 * @return - LinkedList of values of number 1 * number 2
 	 */
-	private static Num Karatsuba(Num a, Num b) {
+	private static LinkedList<Long> Karatsuba(LinkedList<Long> a, LinkedList<Long> b) {
+		
+		int aSize = a.size();
+        int bSize = b.size();
+        int s = Math.max(aSize, bSize);
+        if (s == aSize) {
+            for (int i = 0; i < s - bSize; i++)
+                b.addLast((long) 0);
+        } else {
+            for (int i = 0; i < s - aSize; i++)
+                a.addLast((long) 0);
+        }
 
-		String aStr = toString(a.value);
-		String bStr = toString(b.value);
-
-		if (aStr.length() < 2 || bStr.length() < 2) {
-			return new Num(Long.parseLong(aStr) * Long.parseLong(bStr));
+		if (aSize < 2 || bSize < 2) {
+			 LinkedList<Long> resTemp = new LinkedList<Long>();
+			 Num n = new Num(Long.parseLong(toString(a)) * Long.parseLong(toString(b)));
+			 resTemp.addAll(n.value);
+			 return resTemp;
 		}
 
-		long m = Math.min(a.value.size(), b.value.size());
+		long m = Math.min(a.size(), b.size());
 		long k = m / 2;
-
+		
+		LinkedList<Long> aHigh = new LinkedList<Long>();
+		LinkedList<Long> aLow = new LinkedList<Long>();
+		LinkedList<Long> bHigh = new LinkedList<Long>();
+		LinkedList<Long> bLow = new LinkedList<Long>();
+		
+		/*
 		Num aHigh = new Num(aStr.substring(0, aStr.length() - (int) k));
 		Num aLow = new Num(aStr.substring(aStr.length() - (int) k));
 		Num bHigh = new Num(bStr.substring(0, bStr.length() - (int) k));
 		Num bLow = new Num(bStr.substring(bStr.length() - (int) k));
+		*/
+		
+		for (int i = 0; i < a.size(); i++) {
+			 			if (i < k) {
+			 				aLow.add(a.get(i));
+			 				bLow.add(b.get(i));
+			 			} else {
+			 				aHigh.add(a.get(i));
+			 				bHigh.add(b.get(i));
+			 			}
+			 		}
+		
+		LinkedList<Long> z0 = Karatsuba(aLow, bLow);
+		LinkedList<Long> z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
+		LinkedList<Long> z2 = Karatsuba(aHigh, bHigh);
+		LinkedList<Long> temp = subtract(subtract(z1, z2), z0);
 
+		/*
 		Num z0 = Karatsuba(aLow, bLow);
 		Num z1 = Karatsuba(add(aLow, aHigh), add(bLow, bHigh));
 		Num z2 = Karatsuba(aHigh, bHigh);
+		
 
-		Num temp = subtract(subtract(z1, z2), z0);
+		Num temp = subtract(subtract(z1, z2), z0); */
 
 		return add(z0, add(Num.shift(z2, 2 * k), Num.shift(temp, k)));
 	}
@@ -267,7 +292,7 @@ public class Num implements Comparable<Num> {
 		}
 
 		res = divide(new Num(1), new Num(toString(a.value)), a, b);
-
+		System.out.println(res.toString());
 		return new Num(res, resSign);
 	}
 
@@ -463,8 +488,11 @@ public class Num implements Comparable<Num> {
 		if (sign)
 			sb.append("-");
 		
-		String valueString = toString(value); 
+		String valueString = toString(this.value); 
+		System.out.println(value.toString());
+		System.out.println(valueString);
 		sb.append(valueString);
+		System.out.println(sb.toString());
 		return sb.toString();
 	}
 
@@ -484,6 +512,7 @@ public class Num implements Comparable<Num> {
 			sb.append(valStack.pop().toString());
 		}
 
+		System.out.println("Hi:" + sb.toString());
 		return sb.toString();
 	}
 
@@ -542,9 +571,9 @@ public class Num implements Comparable<Num> {
 	 *            - shift by n
 	 * @return - new List of Numbers with the shift
 	 */
-	static Num shift(Num a, long n) {
+	static LinkedList<Long> shift(LinkedList<Long> a, long n) {
 		for (int i = 0; i < n; i++) {
-			a.value.addFirst((long) 0);
+			a.addFirst((long) 0);
 		}
 		return a;
 	}
