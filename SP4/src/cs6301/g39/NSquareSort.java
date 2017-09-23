@@ -1,6 +1,6 @@
-/** NSquareSort class implements insertion sort on generic arrays
+/** NSquareSort class implements insertion sort on int arrays
  *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
- *  Ver 1.0: 2017/08/28
+ *  Ver 1.0: 2017/09/23
  *  Usage:  NSquareSort.nSquareSort(int[] arr)
  */
 
@@ -12,7 +12,7 @@ public class NSquareSort {
 		for (int i = left + 1; i < left + n; ++i) {
 			int key = arr[i];
 			int j = i - 1;
-			while (j >= 0 && arr[j] > key ) {
+			while (j >= left && arr[j] > key ) {
 				arr[j + 1] = arr[j];
 				j--;
 			}

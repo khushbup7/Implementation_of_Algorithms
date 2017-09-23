@@ -1,8 +1,8 @@
-/** MergeSort class which implements mergesort on an integer array as well as generic arrays
+/** MergeSort class which implements mergesort on an integer array - implements Algorithm 2
  *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
- *  Ver 1.0: 2017/08/26
- *  Usage:  MergeSort.mergeSort(int[] arr, int[] tmp)
- *  		MergeSort.mergeSort(T[] arr, T[] tmp)
+ *  Ver 1.0: 2017/09/22
+ *  Usage:  MergeSort2.mergeSort(int[] arr, int[] tmp)
+
  */
 package cs6301.g39;
 
