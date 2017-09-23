@@ -55,7 +55,7 @@ public class Num implements Comparable<Num> {
 			value.addFirst(Long.valueOf(tempStr.toString()));
 		}
 
-		removeLeadingZeros();
+		removeLeadingZeros(value);
 	}
 
 	Num(long x) {
@@ -174,7 +174,8 @@ public class Num implements Comparable<Num> {
     
 		LinkedList<Long> res = Karatsuba(a.value, b.value);
 	//	res.sign = a.sign ^ b.sign;
-
+		
+		removeLeadingZeros(res);
 		return new Num(res, a.sign ^ b.sign);
 		//return res;
 	}
@@ -316,7 +317,7 @@ public class Num implements Comparable<Num> {
 
 		Num productLeft = product(middleNumbers.getFirst(), divisor);
 		Num productRight = product(middleNumbers.getLast(), divisor);
-
+		
 		int leftCompare = compareMagnitude(productLeft.value, dividend.value);
 		int rightCompare = compareMagnitude(productRight.value, dividend.value);
 
@@ -438,6 +439,9 @@ public class Num implements Comparable<Num> {
 	// compare "this" to "other": return +1 if this is greater, 0 if equal, -1
 	// otherwise
 	public int compareTo(Num other) {
+		
+		removeLeadingZeros(this.value);
+		removeLeadingZeros(other.value);
 		int mag = compareMagnitude(this.value, other.value);
 		int sign = this.sign ? -1 : 1;
 		int othersign = other.sign ? -1 : 1;
@@ -477,7 +481,7 @@ public class Num implements Comparable<Num> {
 	// For example, if base=100, and the number stored corresponds to 10965,
 	// then the output is "100: 65 9 1"
 	void printList() {
-		this.removeLeadingZeros();
+		removeLeadingZeros(this.value);
 		System.out.print(base + " :");
 		for (Long l : value)
 			System.out.print(" " + l);
@@ -485,7 +489,7 @@ public class Num implements Comparable<Num> {
 
 	// Return number to a string in base 10
 	public String toString() {
-		this.removeLeadingZeros();
+		removeLeadingZeros(this.value);
 		StringBuilder sb = new StringBuilder();
 		if (sign)
 			sb.append("-");
@@ -517,20 +521,20 @@ public class Num implements Comparable<Num> {
 	/**
 	 * Removes leading zeros in the value of this Number
 	 */
-	void removeLeadingZeros() {
+	static void removeLeadingZeros(LinkedList<Long> valueList) {
 		Stack<Long> valStack = new Stack<Long>();
 
-		while (!this.value.isEmpty())
-			valStack.push(this.value.removeFirst());
+		while (!valueList.isEmpty())
+			valStack.push(valueList.removeFirst());
 
 		while (!valStack.isEmpty() && valStack.peek() == 0)
 			valStack.pop();
 
 		while (!valStack.isEmpty())
-			this.value.addFirst(valStack.pop());
+			valueList.addFirst(valStack.pop());
 
-		if (this.value.isEmpty()) {
-			this.value.add((long) 0);
+		if (valueList.isEmpty()) {
+			valueList.add((long) 0);
 			return;
 		}
 
@@ -636,7 +640,6 @@ public class Num implements Comparable<Num> {
 		LinkedList<Num> res = new LinkedList<Num>();
 		LinkedList<Long> mid = DivideByTwo(add(start, end).value);
 		Num midNum = new Num(mid, false);
-		midNum.removeLeadingZeros();
 
 		LinkedList<Long> midPlusOne = new LinkedList<Long>(midNum.value);
 		Num midNumPlusOne = new Num(midPlusOne, false);
