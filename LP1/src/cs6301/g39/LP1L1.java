@@ -10,7 +10,7 @@ public class LP1L1 {
 
 	Num z = new Num("84100");
 	//System.out.println(Num.divide(x,y));
-	Num.DivideByTwo(z.value).toString();
+	//Num.DivideByTwo(z.value).toString();
 	}
 }
 
