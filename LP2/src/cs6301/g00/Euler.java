@@ -5,7 +5,6 @@ package cs6301.g00;
 import java.util.List;
 
 import cs6301.g00.Graph.Edge;
-//import cs6301.g39.Graph;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,7 +17,7 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	//new
 	static class EulerVertex {
 		List<Graph.Edge> unprocessed_edges;
-		List<List<Graph.Edge>> subTour; // sub tour from this edge
+		List<Graph.Edge> subTour; // sub tour from this edge
 
 		EulerVertex(Graph.Vertex u) {
 			unprocessed_edges = new LinkedList<>(u.adj);// copy from adj
@@ -26,6 +25,9 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 		}
 
 		public Iterator<Edge> iterator() { return unprocessed_edges.iterator(); }
+
+		public Iterator<Edge> subtour_iterator() { return subTour.iterator(); }
+
 
 	}
 
@@ -53,7 +55,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	}
 
 	boolean isEulerian() {
-		//new - add the sCC class and check if number of components  == 1
 		int scc = 1;
 		if(scc != 1){
 			System.out.println("Graph is not Eulerian");
@@ -74,19 +75,16 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
 	// Find tours starting at vertices with unexplored edges
 	void findTours() {
-
+		System.out.println("qwery");
 		for(Graph.Vertex u : g){
 			if(getVertex(u).unprocessed_edges.size() > 0)
-				findTours(u);
+				findTours(u, getVertex(u).subTour);
 		}
-
-		printTours();
 	}
 
-	void findTours( Graph.Vertex start){
+	void findTours(Graph.Vertex start, List<Graph.Edge> subTour){
 		Graph.Vertex u = start;
 		Graph.Vertex v = start;
-		List<Graph.Edge> subtourlist = new LinkedList<>();
 		Graph.Edge e;
 		boolean flag = true;
 		do{
@@ -95,7 +93,7 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 			while (it.hasNext()) {
 				flag = true;
 				e = it.next();
-				subtourlist.add(e);
+				subTour.add(e);
 				getVertex(u).unprocessed_edges.remove(0);
 				v = e.otherEnd(u);
 				break;
@@ -103,7 +101,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 			}
 			u = v;
 		}while(flag);
-		getVertex(start).subTour.add(subtourlist);
 	}
 
 	void printTours() {
@@ -116,19 +113,31 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	void printTours(Graph.Vertex start) {
 		EulerVertex eu = getVertex(start);
 		System.out.print(start.toString() + " :");
-		for(List<Graph.Edge> l : eu.subTour){
-			for(Graph.Edge e : l){
-				System.out.print(e);
-			}
-		}
+		for(Graph.Edge e : eu.subTour){
+			System.out.print(e);
+		} 
 		System.out.println("");
 	}
 
 
 	// Stitch tours into a single tour using the algorithm discussed in class
-	void stitchTours() {
+	void stitchTours() {	
+		explore(start);
 	}
 
+	void explore(Graph.Vertex u){
+		Graph.Vertex temp = u;
+		if(getVertex(temp).subTour.size() == 0)
+			return;
+		Iterator<Graph.Edge> it = getVertex(temp).subtour_iterator();
+		while(it.hasNext()){
+			Graph.Edge e = it.next();
+			tour.add(e);
+			Graph.Vertex v = e.otherEnd(temp);
+			explore(v);
+			v=temp;
+		}		
+	}
 	void setVerbose(int v) {
 		VERBOSE = v;
 	}
