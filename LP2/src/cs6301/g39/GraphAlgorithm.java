@@ -1,5 +1,5 @@
 
-package cs6301.g00;
+package cs6301.g39;
 
 public class GraphAlgorithm<T> {
     Graph g;

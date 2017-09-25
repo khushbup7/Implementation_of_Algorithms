@@ -1,12 +1,10 @@
-
-// change following line to your group number
-package cs6301.g00;
+package cs6301.g39;
 
 import java.util.Scanner;
+import cs6301.g00.Timer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-//import cs6301.g00.*;
 
 public class LP2 {
 	static int VERBOSE = 1;

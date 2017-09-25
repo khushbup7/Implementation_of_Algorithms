@@ -6,11 +6,13 @@
  *
  */
 
-package cs6301.g00;
+package cs6301.g39;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+
+import cs6301.g00.ArrayIterator;
 
 public class Graph implements Iterable<Graph.Vertex> {
     Vertex[] v; // vertices of graph

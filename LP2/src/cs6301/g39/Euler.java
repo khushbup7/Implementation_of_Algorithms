@@ -1,20 +1,15 @@
-
-// change following line to your group number
-package cs6301.g00;
+package cs6301.g39;
 
 import java.util.List;
-
-import cs6301.g00.Graph.Edge;
-
+import cs6301.g39.Graph.Edge;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	int VERBOSE;
 	List<Graph.Edge> tour;
-	Graph.Vertex start; //new
+	Graph.Vertex start;
 
-	//new
 	static class EulerVertex {
 		List<Graph.Edge> unprocessed_edges;
 		List<Graph.Edge> subTour; // sub tour from this edge
@@ -55,7 +50,8 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	}
 
 	boolean isEulerian() {
-		int scc = 1;
+		int scc = StronglyConnectedComponents.stronglyConnectedComponents(g);
+		//System.out.println("scc"+ scc);
 		if(scc != 1){
 			System.out.println("Graph is not Eulerian");
 			System.out.println("Reason: Graph is not strongly connected");
@@ -75,7 +71,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
 	// Find tours starting at vertices with unexplored edges
 	void findTours() {
-		System.out.println("qwery");
 		for(Graph.Vertex u : g){
 			if(getVertex(u).unprocessed_edges.size() > 0)
 				findTours(u, getVertex(u).subTour);
@@ -105,7 +100,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
 	void printTours() {
 		for(Graph.Vertex u : g){
-			//print tours starting from each vertex
 			printTours(u);
 		}
 	}
