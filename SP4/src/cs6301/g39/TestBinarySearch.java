@@ -12,7 +12,7 @@ public class TestBinarySearch {
 		for(int i=0; i< arr.length;i++)
 			arr1[i] = arr[i];
 		
-		Integer x = 10;
+		Integer x = 11;
 		System.out.println(BinarySearch.binarySearch(arr1, x));
 		
 		

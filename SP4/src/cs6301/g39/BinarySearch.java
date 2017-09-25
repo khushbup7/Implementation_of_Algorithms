@@ -26,7 +26,7 @@ public class BinarySearch {
 	 */
 	public static <T extends Comparable<? super T>> int binarySearch(T[] arr, T x, int start, int end) {
 		int mid = (start + end) / 2;
-		if (arr[mid].compareTo(x) == 0)
+        if (arr[mid-1].compareTo(x) < 0 && arr[mid].compareTo(x) >= 0)
 			return mid - 1;
 		if (arr[mid].compareTo(x) < 0)
 			return binarySearch(arr, x, mid + 1, end);

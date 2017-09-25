@@ -66,7 +66,7 @@ public class Fibonacci {
 	public static void main(String[] args) {
 		Timer timer = new Timer();
 		timer.start();
-		BigInteger linearResult = linearFibonacci(20000);
+		BigInteger linearResult = linearFibonacci(40000);
 		timer.end();
 		System.out.println("nth Fibonacci number using linear algorithm : " + linearResult.toString());
 		System.out.println("Time taken is:");
@@ -74,7 +74,7 @@ public class Fibonacci {
 		
 		timer = new Timer();
 		timer.start();
-		BigInteger logResult = logFibonacci(20000);
+		BigInteger logResult = logFibonacci(40000);
 		timer.end();
 		System.out.println("nth Fibonacci number using log algorithm : " + logResult.toString());
 		System.out.println("Time taken is:");
