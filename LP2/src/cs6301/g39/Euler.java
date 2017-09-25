@@ -1,3 +1,7 @@
+/** This class contains the Euler tour Algorithm
+ *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ *  Ver 1.0: 2017/09/24
+ */
 package cs6301.g39;
 
 import java.util.List;
