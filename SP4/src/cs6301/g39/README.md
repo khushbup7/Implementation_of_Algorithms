@@ -1,4 +1,4 @@
-Fibonacci.java - Contains methods that generate the nth fibonacci number and the main method for demo
+Fibonacci.java - Contains methods that generate the nth fibonacci number and the main method for testing purpose
 	Fibonacci.linearFibonacci(int n)
 	Fibonacci.logFibonacci(int n)
 	

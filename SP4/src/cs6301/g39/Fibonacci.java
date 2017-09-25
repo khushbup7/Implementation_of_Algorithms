@@ -1,5 +1,11 @@
+/** Contains methods that generate the nth fibonacci number and the main method for testing purpose
+ * @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ *  Ver 1.0: 2017/09/20
+ *  Usage: Fibonacci.linearFibonacci(int n)
+		   Fibonacci.logFibonacci(int n)
+ *   
+ * */
 package cs6301.g39;
-
 import java.math.BigInteger;
 import cs6301.g00.Timer;
 
