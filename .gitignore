@@ -2,3 +2,4 @@
 /.recommenders/
 *.gitignore
 backup/Num.java
+*.txt
