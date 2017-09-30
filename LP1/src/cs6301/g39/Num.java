@@ -308,6 +308,10 @@ public class Num implements Comparable<Num> {
 		if (leftCompare <= 0 && rightCompare > 0) {
 			return middleNumbers.getFirst().value;
 		}
+		
+		if (leftCompare < 0 && rightCompare >= 0) {
+			return middleNumbers.getLast().value;
+		}
 
 		if (leftCompare < 0 && rightCompare < 0)
 			return divide(middleNumbers.getLast(), end, dividend, divisor);
@@ -406,6 +410,10 @@ public class Num implements Comparable<Num> {
 
 		if (leftCompare <= 0 && rightCompare > 0) {
 			return middleNumbers.getFirst().value;
+		}
+
+		if (leftCompare < 0 && rightCompare >= 0) {
+			return middleNumbers.getLast().value;
 		}
 
 		if (leftCompare < 0 && rightCompare < 0)
@@ -633,14 +641,12 @@ public class Num implements Comparable<Num> {
 	 * @return - true if even, false otherwise
 	 */
 	private static boolean isEven(Num n) {
-		if (base % 2 == 0) {
-			System.out.println(n.value.getFirst());
+		if (base % 2 == 0)
 			return n.value.getFirst() % 2 == 0 ? true : false;
-		} else {
+		else {
 			long sum = 0;
 			for (Long a : n.value)
 				sum += a;
-			System.out.println(sum);
 			return sum % 2 == 0 ? true : false;
 		}
 	}
