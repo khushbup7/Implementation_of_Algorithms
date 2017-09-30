@@ -13,7 +13,7 @@ Questions solved:
    QuickSort.java - Contains algorithm implemmentations
    TestQuickSort.java - Driver class for QuickSort.java
    
-   Input: The size of the array n as a input parameter to TestQuickSort.java. Default value of 20000 will be used.
+   Input: The size of the array n as a input parameter to TestQuickSort.java. Default value of 70M will be used.
    
 3. Implement 3 versions of the Select algorithm (finding k largest elements)
    and empirically evaluate their performance:
