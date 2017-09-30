@@ -11,7 +11,7 @@ import cs6301.g00.Timer;
 public class TestQuickSort {
 	public static void main(String[] args) {
 		QuickSort q = new QuickSort();
-		int n = 20000;
+		int n = 50000000;
 		if(args.length > 0) {n = Integer.parseInt(args[0]);}
 		
 		int[] arr = new int[n];
