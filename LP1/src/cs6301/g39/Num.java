@@ -378,6 +378,7 @@ public class Num implements Comparable<Num> {
 
 	// SquareRoot
 	static Num squareRoot(Num a) {
+		removeLeadingZeros(a.value);
 		if (a.isZero()) {
 			return new Num(0);
 		}
@@ -433,8 +434,6 @@ public class Num implements Comparable<Num> {
 	// otherwise
 	public int compareTo(Num other) {
 
-		removeLeadingZeros(this.value);
-		removeLeadingZeros(other.value);
 		int mag = compareMagnitude(this.value, other.value);
 		int sign = this.sign ? -1 : 1;
 		int othersign = other.sign ? -1 : 1;
@@ -450,6 +449,8 @@ public class Num implements Comparable<Num> {
 	 * @return - int -1, 0, 1 for negative, equal and positive
 	 */
 	private static int compareMagnitude(LinkedList<Long> a, LinkedList<Long> b) {
+		removeLeadingZeros(a);
+		removeLeadingZeros(b);
 		if (a.size() < b.size())
 			return -1;
 		if (a.size() > b.size())
