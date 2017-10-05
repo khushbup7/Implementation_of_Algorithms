@@ -14,6 +14,6 @@ public class kWayMerge {
 		}
 		
 		
-		PriorityQueue<Integer, Integer> pq = new PriorityQueue<Integer, Integer>();
+		//PriorityQueue<Integer, Integer> pq = new PriorityQueue<Integer, Integer>();
 	}
 }

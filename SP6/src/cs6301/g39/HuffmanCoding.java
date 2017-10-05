@@ -63,7 +63,7 @@ public class HuffmanCoding {
 		}
 	}
 	
-	
+	//todo string from console
 	public static void main(String[] args) {
 		HuffmanNode h = buildHuffmanCode("aaabccdddddeeee");
 		
