@@ -14,6 +14,26 @@ import java.io.File;
 
 public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 	static final int Infinity = Integer.MAX_VALUE;
+	
+	class PrimVertex implements Index {
+		int d, index;
+		boolean seen;
+		Graph.Vertex parent;
+		
+		PrimVertex(Graph.Vertex u) {
+			seen = false;
+			parent = null;
+			d = Infinity;
+		}
+
+		public void putIndex(int i) {
+			index = i;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+	}
 
 	public PrimMST(Graph g) {
 		super(g);
@@ -82,15 +102,5 @@ public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 		int wmst = mst.prim1(s);
 		timer.end();
 		System.out.println(wmst);
-	}
-
-	static class PrimVertex {
-		boolean seen;
-		Graph.Vertex parent;
-		
-		PrimVertex(Graph.Vertex u){
-			seen = false;
-			parent = null;
-		}
 	}
 }
