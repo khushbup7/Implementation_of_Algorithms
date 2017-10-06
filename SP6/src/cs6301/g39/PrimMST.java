@@ -14,12 +14,12 @@ import java.io.File;
 
 public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 	static final int Infinity = Integer.MAX_VALUE;
-	
+
 	class PrimVertex implements Index {
 		int d, index;
 		boolean seen;
 		Graph.Vertex parent;
-		
+
 		PrimVertex(Graph.Vertex u) {
 			seen = false;
 			parent = null;
@@ -47,29 +47,33 @@ public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 	public int prim1(Graph.Vertex s) {
 		PriorityQueue<Graph.Edge> q = new PriorityQueue<>(g.size(), new Comparator<Graph.Edge>() {
 			public int compare(Graph.Edge a, Graph.Edge b) {
-				if(a.weight < b.weight)
+				if (a.weight < b.weight)
 					return -1;
-				else if(a.weight > b.weight)
+				else if (a.weight > b.weight)
 					return 1;
-				else return 0;
+				else
+					return 0;
 			}
 		});
 		// SP6.Q4: Prim's algorithm using PriorityQueue<Edge>:
 		// start
 		getVertex(s).seen = true;
 		int wmst = 0;
-		for(Graph.Edge e : s.adj) q.add(e);
-		while(q.size() != 0) {
+		for (Graph.Edge e : s.adj)
+			q.add(e);
+		while (q.size() != 0) {
 			Graph.Edge currentEdge = q.remove();
-			getVertex(currentEdge.from).seen = true;
-			if(!getVertex(currentEdge.to).seen) {
-				getVertex(currentEdge.to).seen = true;
-				getVertex(currentEdge.to).parent = currentEdge.from;
-				wmst = wmst + currentEdge.weight;
-				for(Graph.Edge e2 : currentEdge.to.adj) {
-					if(!getVertex(e2.otherEnd(currentEdge.to)).seen) 
-						q.add(e2);
-				}
+			Graph.Vertex unseenVertex = getVertex(currentEdge.from).seen ? currentEdge.to : currentEdge.from;
+			if (getVertex(unseenVertex).seen)
+				continue;
+
+			PrimVertex v = getVertex(unseenVertex);
+			v.seen = true;
+			v.parent = currentEdge.from;
+			wmst = wmst + currentEdge.weight;
+			for (Graph.Edge e2 : unseenVertex.adj) {
+				if (!getVertex(e2.otherEnd(unseenVertex)).seen)
+					q.add(e2);
 			}
 		}
 
