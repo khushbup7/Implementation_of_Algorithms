@@ -1,10 +1,9 @@
 /** SelectkLargets class contains methods that implement 3 versions of selecting K largest elements from an array
  * @author Khushbu Patil, Vatsal Patel, Shruti Shetye
  *  Ver 1.0: 2017/09/28
- *  Ver 1.1: 2017/09/29
- *  Usage: SelectkLargest.select1(int[] arr, int k)
- *  	   SelectkLargest.select2(int[] arr, int k)
- *  	   SelectkLargest.select3(int[] arr, int k) 
+ *  Ver 1.1: 2017/10/05
+ *  Usage: SelectkLargest.selectUsingJavaPQ(int[] arr, int k)
+ *  	   SelectkLargest.selectUsingCustomPQ(int[] arr, int k)
  * */
 
 package cs6301.g39;
@@ -17,7 +16,7 @@ import java.util.PriorityQueue;
 
 public class SelectkLargest<T> {
 	
-	/** a function that implements the algorithm using priority queue with min-heap
+	/** a function that implements the algorithm of selecting k largest elements using priority queue provided by java 
 	 * @param arr - An array
 	 * @param k - No of largest elements to be selected from an array.
 	 * @return - array of k largest elements of arr
@@ -26,6 +25,8 @@ public class SelectkLargest<T> {
 		PriorityQueue<T> queue = new PriorityQueue<T>(k);
 		int length = arr.length;
 
+		if(k<=0)
+			return null;
 		if(k > length)
 			return Arrays.asList(arr);
 		
@@ -47,23 +48,33 @@ public class SelectkLargest<T> {
 		return kLargest;
 	}
 	
+	/** A function that implements the algorithm selecting k largest elements using custom priority queue implementation.
+	 * Custom implementation is using Binary Heap (min heap). 
+	 * @param arr - An array
+	 * @param k - No of largest elements to be selected from an array.
+	 * @return - array of k largest elements of arr
+	 */
 	public static<T extends Comparable<? super T>> List<T> selectUsingCustomPQ(T[] arr, int k, T[] temp, Comparator<T> comp) {
 		
 		int length = arr.length;
 
+		if(k<=0)
+			return null;
 		if(k > length)
 			return Arrays.asList(arr);
 		
 		int i;
 		for(i = 0; i< temp.length;  i ++)
 			temp[i] = arr[i];
+		
+		//create a priority queue using binary heap
 		BinaryHeap<T> heap = new BinaryHeap<T>(temp, comp, k);
 		heap.buildHeap();
 		
 		//if a new element is larger than root(min element) then we remove the root and add the new element to the heap 
 		for(; i < length; i++) {
 			if(arr[i].compareTo(heap.peek()) > 0) {
-				heap.replace(arr[i]);
+				heap.replace(arr[i]);    //remove + add operation is performed using single heap operation "replace"
 			}
 		}
 		List<T> kLargest = new ArrayList<T>();

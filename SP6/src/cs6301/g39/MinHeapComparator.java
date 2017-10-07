@@ -1,3 +1,8 @@
+/** Class to implement comparator for min heap
+ * @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ * Ver 1.0: 2017/10/04
+*/
+
 package cs6301.g39;
 
 import java.util.Comparator;

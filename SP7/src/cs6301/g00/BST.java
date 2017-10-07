@@ -41,12 +41,39 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
     public T get(T x) {
 	return null;
     }
+    
+    public Entry<T> find(T x){
+    	//stack ← new Stack<Entry<T>>( )
+    	//stack.push( null ) 
+    	return find(root, x);
+    }
+    
+    public Entry<T> find(Entry<T> t,T x){
+    	return null;
+    }
 
     /** TO DO: Add x to tree. 
      *  If tree contains a node with same key, replace element by x.
      *  Returns true if x is a new element added to tree.
      */
     public boolean add(T x) {
+    	if(root == null) {
+    		root = new Entry<T>(x,null,null);
+    		size = 1;
+    		return true;
+    	}
+    	
+    	Entry<T> t = find(x);
+    	if(x == t.element) {
+    		t.element = x;
+    		return false;
+    	}
+    	else if(x < t.element)   //maybe a comparator
+    		t.left = new Entry<T>(x, null, null);
+    	else
+    		t.right = new Entry<T>(x, null, null);
+    	
+    	size++;
 	return true;
     }
 
