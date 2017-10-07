@@ -17,6 +17,12 @@ public class IndexedHeap<T extends Index> extends BinaryHeap<T> {
 		percolateUp(x.getIndex());
 	}
 	
+	public boolean isEmpty() {
+		if(size == 0)
+			return true;
+		return false;
+	}
+	
 	@Override
 	void move(int i, T x) {
 		pq[i] = x;

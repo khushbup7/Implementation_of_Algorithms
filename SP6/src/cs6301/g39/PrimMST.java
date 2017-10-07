@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 import cs6301.g00.Timer;
+import cs6301.g39.IndexedHeap;
 
 import java.io.FileNotFoundException;
 import java.io.File;
@@ -18,12 +19,14 @@ public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 	class PrimVertex implements Index {
 		int d, index;
 		boolean seen;
-		Graph.Vertex parent;
+		PrimVertex parent;
+		Graph.Vertex self;
 
 		PrimVertex(Graph.Vertex u) {
 			seen = false;
 			parent = null;
 			d = Infinity;
+			self = u;
 		}
 
 		public void putIndex(int i) {
@@ -69,7 +72,7 @@ public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 
 			PrimVertex v = getVertex(unseenVertex);
 			v.seen = true;
-			v.parent = currentEdge.from;
+			v.parent = getVertex(currentEdge.from);
 			wmst = wmst + currentEdge.weight;
 			for (Graph.Edge e2 : unseenVertex.adj) {
 				if (!getVertex(e2.otherEnd(unseenVertex)).seen)
@@ -82,8 +85,28 @@ public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 
 	public int prim2(Graph.Vertex s) {
 		int wmst = 0;
-
-		// SP6.Q6: Prim's algorithm using IndexedHeap<PrimVertex>:
+		PrimVertex t = getVertex(s);
+		t.d = 0;
+		
+		PrimVertex[] nodes = new PrimVertex[node.length];
+		System.arraycopy(node, 0, nodes, 0, node.length);
+		IndexedHeap<PrimVertex> heap = new IndexedHeap<>(nodes, new PrimVertexComparator(), g.size());
+		heap.buildHeap();
+		
+		while (!heap.isEmpty()) {
+			PrimVertex u = heap.remove();
+			u.seen = true;
+			wmst = wmst + u.d;
+			for (Graph.Edge e : u.self.adj) {
+				
+				PrimVertex v = getVertex(e.otherEnd(u.self));
+				if (!v.seen && e.weight < v.d) {
+					v.d = e.weight;
+					v.parent = u;
+					heap.decreaseKey(v);
+				}
+			}
+		}
 
 		return wmst;
 	}
@@ -103,8 +126,9 @@ public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
 
 		Timer timer = new Timer();
 		PrimMST mst = new PrimMST(g);
-		int wmst = mst.prim1(s);
+		int wmst = mst.prim2(s);
 		timer.end();
 		System.out.println(wmst);
 	}
+
 }
