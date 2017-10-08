@@ -4,7 +4,6 @@
 
 package cs6301.g39;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Stack;
@@ -155,35 +154,45 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	public static void main(String[] args) {
 		BST<Integer> t = new BST<>();
 		Scanner in = new Scanner(System.in);
-		while (in.hasNext()) {
-			int x = in.nextInt();
-			if (x > 0) {
-				System.out.print("Add " + x + " : ");
-				t.add(x);
-				t.printTree();
-			} else if (x < 0) {
-				System.out.print("Remove " + x + " : ");
-				t.remove(-x);
-				t.printTree();
-			} else {
-				/*
-				 * Comparable[] arr = t.toArray(); System.out.print("Final: "); for(int i=0;
-				 * i<t.size; i++) { System.out.print(arr[i] + " "); } System.out.println();
-				 */
+		try {
+			while (in.hasNext()) {
+				int x = in.nextInt();
+				if (x > 0) {
+					System.out.print("Add " + x + " : ");
+					t.add(x);
+					t.printTree();
+				} else if (x < 0) {
+					System.out.print("Remove " + x + " : ");
+					t.remove(-x);
+					t.printTree();
+				} else {
+					/*
+					 * Comparable[] arr = t.toArray(); System.out.print("Final: "); for(int i=0;
+					 * i<t.size; i++) { System.out.print(arr[i] + " "); } System.out.println();
+					 */
 
-				Iterator<Integer> itr = t.iterator();
-				while (itr.hasNext()) {
-					System.out.print(" " + itr.next());
+					Iterator<Integer> itr = t.iterator();
+					while (itr.hasNext()) {
+						System.out.print(" " + itr.next());
+					}
+					return;
 				}
-				return;
 			}
+		} finally {
+			in.close();
 		}
 	}
 
 	// TODO: Create an array with the elements using in-order traversal of tree
-	public Comparable[] toArray() {
-		Comparable[] arr = new Comparable[size];
+	public Comparable<?>[] toArray() {
+		Comparable<?>[] arr = new Comparable[size];
 		/* write code to place elements in array here */
+		Iterator<T> it = this.iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			arr[i] = it.next();
+		}
+
 		return arr;
 	}
 
