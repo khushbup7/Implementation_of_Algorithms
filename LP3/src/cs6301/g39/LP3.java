@@ -10,11 +10,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import cs6301.g00.Graph;
-import cs6301.g00.Graph.Vertex;
-import cs6301.g00.Graph.Edge;
 import cs6301.g00.Timer;
+import cs6301.g39.Graph.Edge;
+import cs6301.g39.Graph.Vertex;
 
 public class LP3 {
     static int VERBOSE = 0;
@@ -60,6 +60,45 @@ public class LP3 {
      *  The function should return the total weight of the MST it found.
      */  
     public static int directedMST(Graph g, Vertex start, List<Edge> dmst) {
-	return 0;
+    	XGraph xg = new XGraph(g);
+    	
+    	//Step-1 : delta-u
+    	
+    	int minWeight = Integer.MAX_VALUE ;
+    	for(XGraph.XVertex xu : xg.xv) {
+    		if(xu == start)
+    			continue;
+    		for(XGraph.XEdge xe : xu.xrevadj) {
+    			if(xe.weight < minWeight)
+    				minWeight = xe.weight;
+    		}
+    		for(XGraph.XEdge xe : xu.xrevadj) {
+    				xe.weight = xe.weight - minWeight;
+    		}
+    		minWeight = Integer.MAX_VALUE;
+    	}
+    	
+    	//Step-2 : SCC and DFSVisit
+    	
+    	int numSCC = StronglyConnectedComponents.stronglyConnectedComponents(xg);
+    	if(numSCC < 2) {
+    		for(XGraph.XVertex xu : xg.xv) {
+        		for(XGraph.XEdge xe : xu.xrevadj) {
+        				if(xe.weight != 0)
+        					xe.disabled = true;
+        		}
+        		minWeight = Integer.MAX_VALUE;
+        	}
+    		//TODO DFSVisit(start)
+    		//means we can find MST just by doing DFS
+    	}
+    	else { //more than two SCC
+    		
+    		//Shrinking Step
+    	}
+    	
+    		
+    		
+    	return 0;
     }
 }
