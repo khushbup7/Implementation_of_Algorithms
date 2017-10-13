@@ -97,7 +97,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		if (x == t.element) {
 			t.element = x;
 			return false;
-		} else if (x.compareTo(t.element) < 0) // maybe a comparator
+		} else if (x.compareTo(t.element) < 0) 
 			t.left = new BST.Entry<T>(x, null, null);
 		else
 			t.right = new BST.Entry<T>(x, null, null);
@@ -150,6 +150,17 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	public Iterator<T> iterator() {
 		return new BSTIterator<>(this);
 	}
+	
+	Entry<T> rightRotate(Entry<T> root) {
+		Entry<T> left = root.left;
+		Entry<T> temp = left.right;
+ 
+        // Perform rotation
+        left.right = root;
+        root.left = temp;
+ 
+        return left;
+    }
 
 	public static void main(String[] args) {
 		BST<Integer> t = new BST<>();

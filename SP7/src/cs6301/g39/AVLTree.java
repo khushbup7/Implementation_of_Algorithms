@@ -6,16 +6,16 @@ package cs6301.g39;
 import java.util.Comparator;
 
 public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
-    static class Entry<T> extends BST.Entry<T> {
-        int height;
-        Entry(T x, Entry<T> left, Entry<T> right) {
-            super(x, left, right);
-            height = 0;
-        }
-    }
+	static class Entry<T> extends BST.Entry<T> {
+		int height;
 
-    AVLTree() {
-	super();
-    }
+		Entry(T x, Entry<T> left, Entry<T> right) {
+			super(x, left, right);
+			height = 0;
+		}
+	}
+
+	AVLTree() {
+		super();
+	}
 }
-
