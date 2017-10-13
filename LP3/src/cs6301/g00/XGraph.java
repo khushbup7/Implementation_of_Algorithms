@@ -4,32 +4,30 @@
  *  Example to extend Graph/Vertex/Edge classes to implement algorithms in which nodes and edges
  *  need to be disabled during execution.  Design goal: be able to call other graph algorithms
  *  without changing their codes to account for disabled elements.
+ *
+ *  Ver 1.1: 2017/10/09
+ *  Updated iterator with boolean field ready. Previously, if hasNext() is called multiple
+ *  times, then cursor keeps moving forward, even though the elements were not accessed
+ *  by next().  Also, if program calls next() multiple times, without calling hasNext()
+ *  in between, same element is returned.  Added UnsupportedOperationException to remove.
  **/
 
-package cs6301.g39;
-//import cs6301.g00.Graph.Vertex;
-
-//import cs6301.g00.Graph.Edge;
+package cs6301.g00;
 
 import java.util.Iterator;
 import java.util.List;
-
-import cs6301.g00.ArrayIterator;
-
 import java.util.LinkedList;
-//import java.util.Scanner;
+import java.util.Scanner;
 
 public class XGraph extends Graph {
 	public static class XVertex extends Vertex {
 		boolean disabled;
 		List<XEdge> xadj;
-		List<XEdge> xrevadj;
 
 		XVertex(Vertex u) {
 			super(u);
 			disabled = false;
 			xadj = new LinkedList<>();
-			xrevadj = new LinkedList<>();
 		}
 
 		boolean isDisabled() {
@@ -48,12 +46,17 @@ public class XGraph extends Graph {
 		class XVertexIterator implements Iterator<Edge> {
 			XEdge cur;
 			Iterator<XEdge> it;
+			boolean ready;
 
 			XVertexIterator(XVertex u) {
 				this.it = u.xadj.iterator();
+				ready = false;
 			}
 
 			public boolean hasNext() {
+				if (ready) {
+					return true;
+				}
 				if (!it.hasNext()) {
 					return false;
 				}
@@ -61,14 +64,22 @@ public class XGraph extends Graph {
 				while (cur.isDisabled() && it.hasNext()) {
 					cur = it.next();
 				}
+				ready = true;
 				return !cur.isDisabled();
 			}
 
 			public Edge next() {
+				if (!ready) {
+					if (!hasNext()) {
+						throw new java.util.NoSuchElementException();
+					}
+				}
+				ready = false;
 				return cur;
 			}
 
 			public void remove() {
+				throw new java.lang.UnsupportedOperationException();
 			}
 		}
 	}
@@ -104,7 +115,6 @@ public class XGraph extends Graph {
 				XVertex x1 = getVertex(u);
 				XVertex x2 = getVertex(v);
 				x1.xadj.add(new XEdge(x1, x2, e.weight));
-				x2.xrevadj.add(new XEdge(x1, x2, e.weight));
 			}
 		}
 	}
@@ -155,25 +165,41 @@ public class XGraph extends Graph {
 		XVertex u = (XVertex) getVertex(i);
 		u.disable();
 	}
-
 	/*
-	 * public static void main(String[] args) { Graph g = Graph.readGraph(new
-	 * Scanner(System.in)); XGraph xg = new XGraph(g); Vertex src = xg.getVertex(1);
-	 * 
-	 * System.out.println("Node : Dist : Edges"); BFS b = new BFS(xg, src); b.bfs();
-	 * Vertex farthest = DiameterTree.findFarthest(b); xg.printGraph(b);
-	 * System.out.println("Source: " + src + " Farthest: " + farthest +
-	 * " Distance: " + b.distance(farthest));
-	 * 
-	 * System.out.println("\nDisabling vertices 8 and 9"); xg.disable(8);
-	 * xg.disable(9); b.reinitialize(src); b.bfs(); farthest =
-	 * DiameterTree.findFarthest(b); xg.printGraph(b); System.out.println("Source: "
-	 * + src + " Farthest: " + farthest + " Distance: " + b.distance(farthest)); }
-	 * 
-	 * void printGraph(BFS b) { for(Vertex u: this) { System.out.print("  " + u +
-	 * "  :   " + b.distance(u) + "  : "); for(Edge e: u) { System.out.print(e); }
-	 * System.out.println(); }
-	 */
+	public static void main(String[] args) {
+		Graph g = Graph.readGraph(new Scanner(System.in));
+		
+		XGraph xg = new XGraph(g);
+		Vertex src = xg.getVertex(1);
+
+		System.out.println("Node : Dist : Edges");
+		BFS b = new BFS(xg, src);
+		b.bfs();
+		Vertex farthest = DiameterTree.findFarthest(b);
+		xg.printGraph(b);
+		System.out.println("Source: " + src + " Farthest: " + farthest + " Distance: " + b.distance(farthest));
+
+		System.out.println("\nDisabling vertices 8 and 9");
+		xg.disable(8);
+		xg.disable(9);
+		b.reinitialize(src);
+		b.bfs();
+		farthest = DiameterTree.findFarthest(b);
+		xg.printGraph(b);
+		System.out.println("Source: " + src + " Farthest: " + farthest + " Distance: " + b.distance(farthest));
+	}
+
+	void printGraph(BFS b) {
+		for (Vertex u : this) {
+			System.out.print("  " + u + "  :   " + b.distance(u) + "  : ");
+			for (Edge e : u) {
+				System.out.print(e);
+			}
+			System.out.println();
+		}
+
+	}
+	*/
 
 }
 

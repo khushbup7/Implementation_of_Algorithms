@@ -12,6 +12,9 @@ package cs6301.g39;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import cs6301.g00.Graph;
+import cs6301.g00.GraphAlgorithm;
+
 public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 
 	public static final int INFINITY = Integer.MAX_VALUE;
