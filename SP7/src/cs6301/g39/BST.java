@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class BST<T extends Comparable<? super T>> implements Iterable<T> {
-	Stack<Entry<T>> stack = new Stack<Entry<T>>();
+	Stack<Entry<T>> stack;
 
 	static class Entry<T> {
 		T element;
@@ -34,7 +34,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * TO DO: Is x contained in tree?
 	 */
 	public boolean contains(T x) {
-		BST.Entry<T> t = find(x);
+		Entry<T> t = find(x);
 		return (t != null && t.element == x);
 	}
 
@@ -43,7 +43,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * that is equal to x is returned, null otherwise.
 	 */
 	public T get(T x) {
-		BST.Entry<T> t = find(x);
+		Entry<T> t = find(x);
 		if (t != null && t.element == x)
 			return t.element;
 		else
@@ -51,11 +51,12 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	}
 
 	public Entry<T> find(T x) {
+		stack = new Stack<Entry<T>>();
 		stack.push(null);
 		return find(root, x);
 	}
 
-	public BST.Entry<T> find(BST.Entry<T> t, T x) {
+	public Entry<T> find(Entry<T> t, T x) {
 		if (t == null || t.element == x)
 			return t;
 
@@ -88,7 +89,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 */
 	public boolean add(T x) {
 		if (root == null) {
-			root = new BST.Entry<T>(x, null, null);
+			root = new Entry<T>(x, null, null);
 			size = 1;
 			return true;
 		}
@@ -98,10 +99,11 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			t.element = x;
 			return false;
 		} else if (x.compareTo(t.element) < 0) 
-			t.left = new BST.Entry<T>(x, null, null);
+			t.left = new Entry<T>(x, null, null);
 		else
-			t.right = new BST.Entry<T>(x, null, null);
+			t.right = new Entry<T>(x, null, null);
 
+		stack.push(t);
 		size++;
 		return true;
 	}
@@ -114,7 +116,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		if (root == null)
 			return null;
 
-		BST.Entry<T> t = find(x);
+		Entry<T> t = find(x);
 
 		if (t.element != x)
 			return null;
@@ -124,7 +126,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			bypass(t);
 		else { // t has 2 children
 			stack.push(t);
-			BST.Entry<T> minRight = find(t.right, t.element);
+			Entry<T> minRight = find(t.right, t.element);
 			t.element = minRight.element;
 			bypass(minRight);
 		}
@@ -132,9 +134,9 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		return result;
 	}
 
-	private void bypass(BST.Entry<T> t) {
-		BST.Entry<T> pt = stack.peek();
-		BST.Entry<T> c = t.left == null ? t.right : t.left;
+	private void bypass(Entry<T> t) {
+		Entry<T> pt = stack.peek();
+		Entry<T> c = t.left == null ? t.right : t.left;
 
 		if (pt == null) // t is root
 			root = c;
