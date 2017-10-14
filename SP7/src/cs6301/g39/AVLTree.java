@@ -10,7 +10,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 	static class Entry<T> extends BST.Entry<T> {
 		int height;
 
-		Entry(T x, Entry<T> left, Entry<T> right) {
+		Entry(T x, BST.Entry<T> left, BST.Entry<T> right) {
 			super(x, left, right);
 			height = 0;
 		}
@@ -38,16 +38,28 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 
 	AVLTree() {
 		super();
+		this.creator = new BST.EntryCreator<T>() {
+
+			@Override
+			public BST.Entry<T> createNewEntry(T x, BST.Entry<T> left,
+					BST.Entry<T> right) {
+				return new AVLTree.Entry<T>(x, left, right);
+			}
+        
+		}; 
 	}
+	
+	public AVLTree(EntryCreator<T> creator) {
+        super(creator);
+    }
 
 	public boolean add(T x) {
 		if (super.add(x)) {
  			Entry<T> t = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : null;
-// 			AVLTree.Entry<T> node = new 
-//			if (t != null && t.getHeight() == 0) {
-//				t.height = 1;
-//				updateAncestors(x);
-//			}
+			if (t != null && t.getHeight() == 0) {
+				t.height = 1;
+				updateAncestors(x);
+			}
 		}
 		return true;
 	}
@@ -62,6 +74,8 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			if (balance > 1 && x.compareTo(t.left.element) < 0) {
 				t = (Entry<T>) rightRotate(t);
 				((Entry<T>) t.right).updateHeight();
+				if(stack.peek() == null)
+					root = t;
 			}
 
 		}

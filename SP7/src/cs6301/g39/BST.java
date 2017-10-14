@@ -10,6 +10,7 @@ import java.util.Stack;
 
 public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	Stack<Entry<T>> stack;
+	protected EntryCreator<T> creator = null;
 
 	static class Entry<T> {
 		T element;
@@ -28,6 +29,18 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	public BST() {
 		root = null;
 		size = 0;
+		this.creator = new EntryCreator<T>() {
+
+			@Override
+			public Entry<T> createNewEntry(T x, Entry<T> left, Entry<T> right) {
+				return new Entry<T>(x, left, right);
+			}
+
+		};
+	}
+
+	public BST(EntryCreator<T> creator) {
+		this.creator = creator;
 	}
 
 	/**
@@ -88,8 +101,10 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * by x. Returns true if x is a new element added to tree.
 	 */
 	public boolean add(T x) {
+		Entry<T> newNode = this.creator.createNewEntry(x, null, null);
+
 		if (root == null) {
-			root = new Entry<T>(x, null, null);
+			root = newNode;
 			size = 1;
 			return true;
 		}
@@ -98,10 +113,10 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		if (x == t.element) {
 			t.element = x;
 			return false;
-		} else if (x.compareTo(t.element) < 0) 
-			t.left = new Entry<T>(x, null, null);
+		} else if (x.compareTo(t.element) < 0)
+			t.left = newNode;
 		else
-			t.right = new Entry<T>(x, null, null);
+			t.right = newNode;
 
 		stack.push(t);
 		size++;
@@ -152,17 +167,21 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	public Iterator<T> iterator() {
 		return new BSTIterator<>(this);
 	}
-	
+
 	Entry<T> rightRotate(Entry<T> root) {
 		Entry<T> left = root.left;
 		Entry<T> temp = left.right;
- 
-        // Perform rotation
-        left.right = root;
-        root.left = temp;
- 
-        return left;
-    }
+
+		// Perform rotation
+		left.right = root;
+		root.left = temp;
+
+		return left;
+	}
+
+	protected static interface EntryCreator<T extends Comparable<? super T>> {
+		public Entry<T> createNewEntry(T x, Entry<T> left, Entry<T> right);
+	}
 
 	public static void main(String[] args) {
 		BST<Integer> t = new BST<>();
