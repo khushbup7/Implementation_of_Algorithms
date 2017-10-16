@@ -16,23 +16,27 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		}
 
 		private int getHeight() {
-			return (this == null) ? 0 : height;
+			return height;
 		}
 
 		private void updateHeight() {
+			if (left == null && right == null) {
+				height = 0;
+				return;
+			}
 			height = getMaxChildHeight() + 1;
 		}
 
 		private int getMaxChildHeight() {
-			int leftChildHeight = ((Entry<T>) this.left).getHeight();
-			int rightChildHeight = ((Entry<T>) this.right).getHeight();
+			int leftChildHeight = (this.left == null) ? 0 : ((Entry<T>) this.left).height;
+			int rightChildHeight = (this.right == null) ? 0 : ((Entry<T>) this.right).height;
 			return Math.max(leftChildHeight, rightChildHeight);
 		}
 
 		private int getBalance() {
-			int leftChildHeight = ((Entry<T>) this.left).getHeight();
-			int rightChildHeight = ((Entry<T>) this.right).getHeight();
-			return Math.abs(leftChildHeight - rightChildHeight);
+			int leftChildHeight = (this.left == null) ? 0 : ((Entry<T>) this.left).height;
+			int rightChildHeight = (this.right == null) ? 0 : ((Entry<T>) this.right).height;
+			return leftChildHeight - rightChildHeight;
 		}
 	}
 
@@ -41,45 +45,119 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		this.creator = new BST.EntryCreator<T>() {
 
 			@Override
-			public BST.Entry<T> createNewEntry(T x, BST.Entry<T> left,
-					BST.Entry<T> right) {
+			public BST.Entry<T> createNewEntry(T x, BST.Entry<T> left, BST.Entry<T> right) {
 				return new AVLTree.Entry<T>(x, left, right);
 			}
-        
-		}; 
+
+		};
 	}
-	
+
 	public AVLTree(EntryCreator<T> creator) {
-        super(creator);
-    }
+		super(creator);
+	}
 
 	public boolean add(T x) {
 		if (super.add(x)) {
- 			Entry<T> t = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : null;
+			Entry<T> t = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : null;
 			if (t != null && t.getHeight() == 0) {
 				t.height = 1;
-				updateAncestors(x);
+				balanceAfterAdd(x);
 			}
 		}
 		return true;
 	}
 
-	private void updateAncestors(T x) {
+	private void balanceAfterAdd(T x) {
+		Entry<T> prev = null;
 		while (stack.peek() != null) {
 			Entry<T> t = (Entry<T>) stack.pop();
 
-			t.updateHeight();
+			if (prev != null && t.element.compareTo(prev.element) > 0)
+				t.left = prev;
+			if (prev != null && t.element.compareTo(prev.element) < 0)
+				t.right = prev;
 
+			t.updateHeight();
 			int balance = t.getBalance();
-			if (balance > 1 && x.compareTo(t.left.element) < 0) {
-				t = (Entry<T>) rightRotate(t);
-				((Entry<T>) t.right).updateHeight();
-				if(stack.peek() == null)
+
+			if (balance > 1 || balance < -1) {
+				Entry<T> child = null;
+
+				if (balance > 1 && x.compareTo(t.left.element) < 0) {
+					t = (Entry<T>) rightRotate(t);
+					child = (Entry<T>) t.right;
+				}
+				if (balance < -1 && x.compareTo(t.right.element) > 0) {
+					t = (Entry<T>) leftRotate(t);
+					child = (Entry<T>) t.left;
+				}
+				if (balance > 1 && x.compareTo(t.left.element) > 0) {
+					child = (Entry<T>) leftRotate(t.left);
+					t.left = child;
+					t = (Entry<T>) rightRotate(t);
+				}
+				if (balance < -1 && x.compareTo(t.right.element) < 0) {
+					child = (Entry<T>) rightRotate(t.right);
+					t.right = child;
+					t = (Entry<T>) leftRotate(t);
+				}
+
+				child.updateHeight();
+				t.updateHeight();
+				prev = t; // track child to update parent
+				if (stack.peek() == null)
 					root = t;
 			}
-
 		}
+	}
 
+	public T remove(T x) {
+		T rem = super.remove(x);
+		if (rem != null && stack != null && !stack.isEmpty() && stack.peek() != null) {
+			Entry<T> t = (Entry<T>) stack.pop();
+			int prevHeight = t.getHeight();
+			t.updateHeight();
+			if (prevHeight != t.getHeight())
+				balanceAfterDelete();
+		}
+		return rem;
+	}
+
+	private void balanceAfterDelete() {
+		while (stack.peek() != null) {
+			Entry<T> t = (Entry<T>) stack.pop();
+			t.updateHeight();
+			int balance = t.getBalance();
+
+			if (balance > 1 || balance < -1) {
+				Entry<T> child = null;
+				if (balance > 1 && ((Entry<T>) t.left).getBalance() >= 0) {
+					t = (Entry<T>) rightRotate(t);
+					child = (Entry<T>) t.right;
+				}
+
+				if (balance > 1 && ((Entry<T>) t.left).getBalance() < 0) {
+					child = (Entry<T>) leftRotate(t.left);
+					t.left = child;
+					t = (Entry<T>) rightRotate(t);
+				}
+
+				if (balance < -1 && ((Entry<T>) t.right).getBalance() <= 0) {
+					t = (Entry<T>) leftRotate(t);
+					child = (Entry<T>) t.left;
+				}
+				if (balance < -1 && ((Entry<T>) t.right).getBalance() > 0) {
+					child = (Entry<T>) rightRotate(t.right);
+					t.right = child;
+					t = (Entry<T>) leftRotate(t);
+				}
+
+				child.updateHeight();
+				t.updateHeight();
+				if (stack.peek() == null)
+					root = t;
+			}
+		}
 	}
 
 	public static void main(String[] args) {
