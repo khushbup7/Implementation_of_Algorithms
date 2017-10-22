@@ -14,6 +14,9 @@
 
 package cs6301.g00;
 
+import cs6301.g00.Graph.Vertex;
+import cs6301.g00.Graph.Edge;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
@@ -165,41 +168,41 @@ public class XGraph extends Graph {
 		XVertex u = (XVertex) getVertex(i);
 		u.disable();
 	}
-	/*
-	public static void main(String[] args) {
-		Graph g = Graph.readGraph(new Scanner(System.in));
-		
-		XGraph xg = new XGraph(g);
-		Vertex src = xg.getVertex(1);
 
-		System.out.println("Node : Dist : Edges");
-		BFS b = new BFS(xg, src);
-		b.bfs();
-		Vertex farthest = DiameterTree.findFarthest(b);
-		xg.printGraph(b);
-		System.out.println("Source: " + src + " Farthest: " + farthest + " Distance: " + b.distance(farthest));
+	// public static void main(String[] args) {
+	// Graph g = Graph.readGraph(new Scanner(System.in));
+	// XGraph xg = new XGraph(g);
+	// Vertex src = xg.getVertex(1);
+	//
+	// System.out.println("Node : Dist : Edges");
+	// BFS b = new BFS(xg, src);
+	// b.bfs();
+	// Vertex farthest = DiameterTree.findFarthest(b);
+	// xg.printGraph(b);
+	// System.out.println("Source: " + src + " Farthest: " + farthest + " Distance:
+	// " + b.distance(farthest));
+	//
+	// System.out.println("\nDisabling vertices 8 and 9");
+	// xg.disable(8);
+	// xg.disable(9);
+	// b.reinitialize(src);
+	// b.bfs();
+	// farthest = DiameterTree.findFarthest(b);
+	// xg.printGraph(b);
+	// System.out.println("Source: " + src + " Farthest: " + farthest + " Distance:
+	// " + b.distance(farthest));
+	// }
 
-		System.out.println("\nDisabling vertices 8 and 9");
-		xg.disable(8);
-		xg.disable(9);
-		b.reinitialize(src);
-		b.bfs();
-		farthest = DiameterTree.findFarthest(b);
-		xg.printGraph(b);
-		System.out.println("Source: " + src + " Farthest: " + farthest + " Distance: " + b.distance(farthest));
-	}
-
-	void printGraph(BFS b) {
-		for (Vertex u : this) {
-			System.out.print("  " + u + "  :   " + b.distance(u) + "  : ");
-			for (Edge e : u) {
-				System.out.print(e);
-			}
-			System.out.println();
-		}
-
-	}
-	*/
+	// void printGraph(BFS b) {
+	// for(Vertex u: this) {
+	// System.out.print(" " + u + " : " + b.distance(u) + " : ");
+	// for(Edge e: u) {
+	// System.out.print(e);
+	// }
+	// System.out.println();
+	// }
+	//
+	// }
 
 }
 
