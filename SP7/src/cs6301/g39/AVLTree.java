@@ -92,7 +92,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 					child = (Entry<T>) t.left;
 				}
 				if (balance > 1 && x.compareTo(t.left.element) > 0) {
-					child = (Entry<T>) leftRotate(t.left);
+					child= (Entry<T>) leftRotate(t.left);
 					t.left = child;
 					t = (Entry<T>) rightRotate(t);
 				}

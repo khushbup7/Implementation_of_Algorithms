@@ -111,7 +111,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 
 		Entry<T> t = find(x);
 		if (x == t.element) {
-			t.element = x;
+			t.element = x; // replacing the element
 			return false;
 		} else if (x.compareTo(t.element) < 0)
 			t.left = newNode;
