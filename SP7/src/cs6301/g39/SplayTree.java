@@ -30,22 +30,21 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 	public T remove(T x) {
 		T removed = super.remove(x);
 		if(removed != x){
-			Entry<T> parent = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : root;
-			 if(x.compareTo(parent.element) < 0){
-				 if(parent == root) 
-					 return null;
-				 splay(parent.left);
-				 
-			 }
-			 else{
-				 if(parent == root) 
-					 return null;
-				 splay(parent.right);
-			 }
+			Entry<T> parent = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.peek() : root;
+			if(x.compareTo(parent.element) < 0){
+				if(parent == root) 
+					return null;
+				splay(parent.left);
+
+			}
+			else{
+				if(parent == root) 
+					return null;
+				splay(parent.right);
+			}
 			return null;
 		}
 		else{
-			// find if found splay(parent) and return removed
 			Entry<T> parent = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : root;
 			splay(parent);
 			return removed;
@@ -76,9 +75,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 					}
 					else {
 						temp = rightRotate(temp);
-						if(temp.element.compareTo(attachment.element) > 0)
-							attachment.right = temp;
-						else attachment.left = temp;
+						attach(attachment, temp);
 					}
 				}
 				else if (grandparent.right == parent && parent.right == x) {
@@ -89,9 +86,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 					}
 					else {
 						temp = leftRotate(temp);
-						if(temp.element.compareTo(attachment.element) > 0)
-							attachment.right = temp;
-						else attachment.left = temp;
+						attach(attachment, temp);
 					}
 				}
 				else if(grandparent.left == parent && parent.right == x) {	
@@ -103,9 +98,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 					}
 					else {
 						temp = rightRotate(grandparent);
-						if(temp.element.compareTo(attachment.element) > 0)
-							attachment.right = temp;
-						else attachment.left = temp;
+						attach(attachment, temp);
 					}
 				}
 				else if(grandparent.right == parent && parent.left == x) {
@@ -117,15 +110,19 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 					}
 					else {
 						temp = leftRotate(grandparent);
-						if(temp.element.compareTo(attachment.element) > 0)
-							attachment.right = temp;
-						else attachment.left = temp;
+						attach(attachment, temp);
 					}
 				}
 
 
 			}
 		}
+	}
+
+	public void attach(Entry<T> attachment, Entry<T> x){
+		if(x.element.compareTo(attachment.element) > 0)
+			attachment.right = x;
+		else attachment.left = x;
 	}
 
 	public static void main(String[] args) {
