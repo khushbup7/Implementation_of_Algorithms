@@ -28,17 +28,33 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 	}
 
 	public T remove(T x) {
-		// find if found splay(parent) and return removed
-		//  else splay the last node reached
-		return null;
+		T removed = super.remove(x);
+		if(removed != x){
+			Entry<T> parent = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : root;
+			 if(x.compareTo(parent.element) < 0){
+				 if(parent == root) 
+					 return null;
+				 splay(parent.left);
+				 
+			 }
+			 else{
+				 if(parent == root) 
+					 return null;
+				 splay(parent.right);
+			 }
+			return null;
+		}
+		else{
+			// find if found splay(parent) and return removed
+			Entry<T> parent = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : root;
+			splay(parent);
+			return removed;
+		}
 	}
 
 	public void splay(Entry<T> x) {
 		if (x.element == root.element) return ;
 		while(stack.peek() != null) {
-			/* if t is left (or right) child of root then // Zig 
-				Perform a single rotation [R] (or [L]) at
-				root to bring t to the root of the tree */
 			if(x == root.left) {
 				root = rightRotate(root);
 				break;
@@ -55,14 +71,28 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 				if(grandparent.left == parent && parent.left == x) {
 					temp = rightRotate(grandparent);
 					attachment = stack.peek();
-					if(attachment == null) root = rightRotate(temp);
-					else attachment.left = rightRotate(temp);
+					if(attachment == null) {
+						root = rightRotate(temp);
+					}
+					else {
+						temp = rightRotate(temp);
+						if(temp.element.compareTo(attachment.element) > 0)
+							attachment.right = temp;
+						else attachment.left = temp;
+					}
 				}
 				else if (grandparent.right == parent && parent.right == x) {
 					temp = leftRotate(grandparent);
 					attachment = stack.peek();
-					if(attachment == null) root = leftRotate(temp);
-					else attachment.right = leftRotate(temp);
+					if(attachment == null) {
+						root = leftRotate(temp);
+					}
+					else {
+						temp = leftRotate(temp);
+						if(temp.element.compareTo(attachment.element) > 0)
+							attachment.right = temp;
+						else attachment.left = temp;
+					}
 				}
 				else if(grandparent.left == parent && parent.right == x) {	
 					temp = (Entry<T>) leftRotate(grandparent.left);

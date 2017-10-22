@@ -178,7 +178,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 
 		return left;
 	}
-	
+
 	Entry<T> leftRotate(Entry<T> root) {
 		Entry<T> right = root.right;
 		Entry<T> temp = right.left;
