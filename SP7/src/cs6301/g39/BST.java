@@ -234,6 +234,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		int i = 0;
 		while (it.hasNext()) {
 			arr[i] = it.next();
+			i++;
 		}
 
 		return arr;

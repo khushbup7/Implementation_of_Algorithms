@@ -3,7 +3,6 @@
  */
 package cs6301.g39;
 
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
@@ -175,15 +174,14 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 					t.remove(-x);
 					t.printTree();
 				} else {
-					/*
-					 * Comparable[] arr = t.toArray(); System.out.print("Final: "); for(int i=0;
-					 * i<t.size; i++) { System.out.print(arr[i] + " "); } System.out.println();
-					 */
-
-					Iterator<Integer> itr = t.iterator();
-					while (itr.hasNext()) {
-						System.out.print(" " + itr.next());
-					}
+					
+					 Comparable[] arr = t.toArray(); 
+					 System.out.print("Final: "); 
+					 for(int i=0; i<t.size; i++) { 
+						 System.out.print(arr[i] + " "); 
+					 }
+					 System.out.println();
+					
 					return;
 				}
 			}
