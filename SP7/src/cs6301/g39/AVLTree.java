@@ -1,11 +1,14 @@
-
-/** Starter code for AVL Tree
- */
+/** Class to implement AVL Tree
+ * @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ * Ver 1.0: 2017/10/19
+*/
 package cs6301.g39;
 
 import java.util.Scanner;
 
 public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
+	
+	// Entry of a AVLTree. Contains additional info - height of the node
 	static class Entry<T> extends BST.Entry<T> {
 		int height;
 
@@ -18,6 +21,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			return height;
 		}
 
+		// updates height of the node from child nodes
 		private void updateHeight() {
 			if (left == null && right == null) {
 				height = 0;
@@ -26,12 +30,14 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			height = getMaxChildHeight() + 1;
 		}
 
+		// gets height of the child which has maximum height of the two 
 		private int getMaxChildHeight() {
 			int leftChildHeight = (this.left == null) ? 0 : ((Entry<T>) this.left).height;
 			int rightChildHeight = (this.right == null) ? 0 : ((Entry<T>) this.right).height;
 			return Math.max(leftChildHeight, rightChildHeight);
 		}
 
+		// returns balance of the tree. Balance = height of left child - height of right child
 		private int getBalance() {
 			int leftChildHeight = (this.left == null) ? 0 : ((Entry<T>) this.left).height;
 			int rightChildHeight = (this.right == null) ? 0 : ((Entry<T>) this.right).height;
@@ -55,6 +61,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		super(creator);
 	}
 
+	// adds element x to the tree
 	public boolean add(T x) {
 		if (super.add(x)) {
 			Entry<T> t = (stack != null && !stack.isEmpty()) ? (Entry<T>) stack.pop() : null;
@@ -66,6 +73,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		return true;
 	}
 
+	// called if the tree has an imbalance after add
 	private void balanceAfterAdd(T x) {
 		Entry<T> prev = null;
 		while (stack.peek() != null) {
@@ -110,6 +118,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		}
 	}
 
+	// remove element x form the tree
 	public T remove(T x) {
 		T rem = super.remove(x);
 		if (rem != null && stack != null && !stack.isEmpty() && stack.peek() != null) {
@@ -122,6 +131,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		return rem;
 	}
 
+	// called if the tree has an imbalance after remove
 	private void balanceAfterDelete() {
 		while (stack.peek() != null) {
 			Entry<T> t = (Entry<T>) stack.pop();
@@ -175,7 +185,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 					t.printTree();
 				} else {
 					
-					 Comparable[] arr = t.toArray(); 
+					 Comparable<?>[] arr = t.toArray(); 
 					 System.out.print("Final: "); 
 					 for(int i=0; i<t.size; i++) { 
 						 System.out.print(arr[i] + " "); 
