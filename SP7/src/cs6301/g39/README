@@ -1,0 +1,30 @@
+ReadMe SP7
+
+Group : g39
+Authors: Khushbu Patil, Vatsal Patel, Shruti Shetye
+
+Questions solved:
+1. Question-1
+	Implement binary search trees (BST), with the following public methods: contains, add, remove, iterator.
+	
+   Related files:
+   BST.java - Contains the standard BST class which can be extended to implement balanced Binary Search Trees. Driver method included
+   BSTIterator.java - Iterator for the BST 
+   
+2. Question-2
+   Extend BST to AVL trees (AVLTree).
+
+   Related files: 
+   AVLTree.java - Contains implementation of the AVL tree. Driver method included
+   
+3. Question-3
+   Extend BST to Red Black Trees (RedBlacktree).
+
+   Related files: 
+   RedBlacktree.java - Contains implementation of the Red Black tree. Driver method included
+
+4. Question-4
+   Extend BST to Splay Trees (SplayTree).  Implement bottom-up splaying.
+
+   Related files: 
+   SplayTree.java - Contains implementation of the Splay Trees. Driver method included
