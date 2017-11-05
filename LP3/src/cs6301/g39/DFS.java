@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import cs6301.g00.Graph;
-import cs6301.g00.GraphAlgorithm;
 
 public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 
@@ -87,7 +86,7 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 	 * @param u
 	 *            - a vertex u of graph G
 	 */
-	void DFSVisit(Graph.Vertex u) {
+	public void DFSVisit(Graph.Vertex u) {
 
 		DFSVertex dvU = getVertex(u);
 		dvU.seen = true;

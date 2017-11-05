@@ -13,15 +13,23 @@ import cs6301.g00.Graph;
 
 public class StronglyConnectedComponents {
 
+	DFS dfsTrav;
+	int numComponents;
+	Graph g;
+
+	public StronglyConnectedComponents(Graph g) {
+		this.g = g;
+	}
+
 	/**
 	 * @param g
 	 *            - Graph to be processed
 	 * @return - Number of strongly connected components in the given graph
 	 */
-	public static int stronglyConnectedComponents(Graph g) {
+	public int stronglyConnectedComponents() {
 
 		Iterator<Graph.Vertex> itOrder = g.iterator();
-		DFS dfsTrav = new DFS(g);
+		dfsTrav = new DFS(g);
 		dfsTrav.dfs(itOrder);
 
 		LinkedList<Graph.Vertex> decFinOrd = new LinkedList<Graph.Vertex>();
@@ -37,15 +45,15 @@ public class StronglyConnectedComponents {
 
 		dfsTrav.reinitialize();
 		dfsTrav.dfs(decFinOrd.iterator());
-		
+
 		for (Graph.Vertex t : g) {
 			List<Graph.Edge> temp = t.adj;
 			t.adj = t.revAdj;
 			t.revAdj = temp;
-		} 
-		
-		return dfsTrav.cNo;
+		}
+
+		numComponents = dfsTrav.cNo;
+		return numComponents;
 	}
 
 }
-

@@ -60,6 +60,7 @@ public class LP3 {
      *  The function should return the total weight of the MST it found.
      */  
     public static int directedMST(Graph g, Vertex start, List<Edge> dmst) {
-    	return DirectedMinimumSpanningTree.minimumSpanningTree(g, start, dmst);
+    	DirectedMinimumSpanningTree diMST = new DirectedMinimumSpanningTree(g);
+    	return diMST.getMinWeightSpanningTree(start, dmst);
     }
 }
