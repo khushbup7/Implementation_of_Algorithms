@@ -53,6 +53,9 @@ public class DirectedMinimumSpanningTree {
 			StronglyConnectedComponents scc = new StronglyConnectedComponents(dg);
 			scc.stronglyConnectedComponents();
 
+			if (scc.numComponents == DMSTGraph.enabledVertices)
+				break;
+
 			enableEdges(disabledEdges);
 			shrinkGraph(scc);
 
@@ -62,8 +65,17 @@ public class DirectedMinimumSpanningTree {
 			// System.out.println("from " + e.fromVertex() + " to " + e.toVertex());
 			// }
 		}
+
+		// while(dmst.size() != dg.numVertices) {
+		// expandGraph();
+		// }
+
 		return minWeight;
 	}
+
+//	private void expandGraph() {
+//
+//	}
 
 	private void enableEdges(List<DMSTEdge> disabledEdges) {
 		for (DMSTEdge de : disabledEdges)
@@ -71,6 +83,7 @@ public class DirectedMinimumSpanningTree {
 	}
 
 	private void shrinkGraph(StronglyConnectedComponents scc) {
+
 		int numSCC = scc.numComponents;
 
 		// create hashset for each component
@@ -198,6 +211,7 @@ public class DirectedMinimumSpanningTree {
 	int reduceWeights(Vertex start, List<DMSTEdge> disabledEdges) {
 
 		int weightReduced = 0;
+
 		for (Vertex u : dg) {
 			DMSTVertex du = (DMSTVertex) u;
 			int minWeight = Integer.MAX_VALUE;
@@ -208,8 +222,9 @@ public class DirectedMinimumSpanningTree {
 			Iterator<Edge> revIt = du.reverseIterator();
 			while (revIt.hasNext()) {
 				Edge e = revIt.next();
-				if (e.getWeight() < minWeight)
+				if (e.getWeight() < minWeight) {
 					minWeight = e.getWeight();
+				}
 			}
 
 			revIt = du.reverseIterator();
@@ -226,8 +241,9 @@ public class DirectedMinimumSpanningTree {
 					disabledEdges.add((DMSTEdge) e);
 				}
 			}
-			weightReduced += minWeight;
-			//System.out.println("weightReduced " + minWeight);
+			if (minWeight != Integer.MAX_VALUE) {
+				weightReduced += minWeight;
+			}
 		}
 		return weightReduced;
 	}
