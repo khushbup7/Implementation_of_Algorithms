@@ -54,10 +54,10 @@ public class DirectedMinimumSpanningTree {
 			shrinkGraph(scc);
 
 			// ttest code/
-			for (Vertex u : dg) {
-				for (Edge e : u)
-					System.out.println("from " + e.fromVertex() + " to " + e.toVertex());
-			}
+//			for (Vertex u : dg) {
+//				for (Edge e : u)
+//					System.out.println("from " + e.fromVertex() + " to " + e.toVertex());
+//			}
 		}
 		return minWeight;
 	}
