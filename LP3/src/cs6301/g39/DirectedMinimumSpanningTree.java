@@ -20,6 +20,8 @@ public class DirectedMinimumSpanningTree {
 
 	DMSTGraph dg;
 	int minWeight;
+	Vertex start;
+	DMSTVertex dstart;
 
 	public DirectedMinimumSpanningTree(Graph g) {
 		dg = new DMSTGraph(g);
@@ -29,7 +31,8 @@ public class DirectedMinimumSpanningTree {
 
 	int getMinWeightSpanningTree(Vertex start, List<Edge> dmst) {
 
-		DMSTVertex dstart = dg.getVertex(start);
+		this.start = start;
+		dstart = dg.getVertex(start);
 
 		while (true) {
 			// reduce weights
@@ -54,10 +57,10 @@ public class DirectedMinimumSpanningTree {
 			shrinkGraph(scc);
 
 			// ttest code/
-//			for (Vertex u : dg) {
-//				for (Edge e : u)
-//					System.out.println("from " + e.fromVertex() + " to " + e.toVertex());
-//			}
+			// for (Vertex u : dg) {
+			// for (Edge e : u)
+			// System.out.println("from " + e.fromVertex() + " to " + e.toVertex());
+			// }
 		}
 		return minWeight;
 	}
@@ -84,7 +87,7 @@ public class DirectedMinimumSpanningTree {
 				vertexComponents.get(u.componentNo - 1).add(du);
 			}
 		}
-		
+
 		ArrayList<DMSTVertex> newVertices = new ArrayList<>();
 		int currComponentNo = 0;
 
@@ -106,14 +109,17 @@ public class DirectedMinimumSpanningTree {
 
 				createNewEdges(minFromEdges, minToEdges, dmstCVertex, currComponentNo);
 
-				for (Vertex u : hs)
+				for (Vertex u : hs) {
 					((DMSTVertex) u).disable();
+					if (u.equals(dstart))
+						dstart = dmstCVertex;
+				}
 				dmstCVertex.disable();
 				dg.addVertex(dmstCVertex);
 				newVertices.add(dmstCVertex);
 			}
 		}
-		for(DMSTVertex u: newVertices) 
+		for (DMSTVertex u : newVertices)
 			u.enable();
 	}
 
@@ -221,6 +227,7 @@ public class DirectedMinimumSpanningTree {
 				}
 			}
 			weightReduced += minWeight;
+			//System.out.println("weightReduced " + minWeight);
 		}
 		return weightReduced;
 	}
