@@ -1,3 +1,7 @@
+/** Class to represent DMST Graph
+ *  @author Khushbu Patil, Vatsal Patel, Shruti Shetye
+ *  Ver 1.0: 2017/11/12
+ */
 package cs6301.g39;
 
 import java.util.Iterator;
@@ -139,9 +143,11 @@ public class DMSTGraph extends Graph {
 	static class DMSTEdge extends Edge {
 		boolean disabled;
 		DMSTEdge src;
+		int origWeight;
 
 		DMSTEdge(Vertex from, Vertex to, int weight, int name) {
 			super(from, to, weight, name);
+			origWeight = weight;
 			src = null;
 			disabled = false;
 		}

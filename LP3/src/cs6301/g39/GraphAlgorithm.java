@@ -1,7 +1,6 @@
 package cs6301.g39;
 
 import cs6301.g00.Graph;
-import cs6301.g00.Graph.Vertex;
 
 public class GraphAlgorithm<T> {
     Graph g;

@@ -17,7 +17,7 @@ import cs6301.g00.Graph.Edge;
 import cs6301.g00.Graph.Vertex;
 
 public class LP3 {
-    static int VERBOSE = 0;
+    static int VERBOSE = 1;
     public static void main(String[] args) throws FileNotFoundException {
         Scanner in;
         if (args.length > 0) {
@@ -62,5 +62,6 @@ public class LP3 {
     public static int directedMST(Graph g, Vertex start, List<Edge> dmst) {
     	DirectedMinimumSpanningTree diMST = new DirectedMinimumSpanningTree(g);
     	return diMST.getMinWeightSpanningTree(start, dmst);
+    	
     }
 }
