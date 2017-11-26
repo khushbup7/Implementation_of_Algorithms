@@ -1,6 +1,7 @@
 
 package cs6301.g39;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -127,13 +128,14 @@ public class MDS {
 					return -1;
 				else if (o1.getValue() < o2.getValue())
 					return 1;
-				else return 0;
+				else
+					return 0;
 			}
 		});
 		pq.addAll(findItemsMap.entrySet());
 		result = new Long[pq.size()];
 		int i = 0;
-		while(i < result.length) {
+		while (i < result.length) {
 			result[i] = pq.remove().getKey();
 			i++;
 		}
@@ -174,7 +176,7 @@ public class MDS {
 
 		Long[] result = new Long[pq.size()];
 		int i = 0;
-		while(i < result.length) {
+		while (i < result.length) {
 			result[i] = pq.remove().id;
 			i++;
 		}
@@ -199,7 +201,7 @@ public class MDS {
 		pq.addAll(allSuppliers.entrySet());
 		Long[] result = new Long[pq.size()];
 		int i = 0;
-		while(i < result.length) {
+		while (i < result.length) {
 			result[i] = pq.remove().getKey();
 			i++;
 		}
@@ -230,7 +232,7 @@ public class MDS {
 		}
 		Long[] result = new Long[pq.size()];
 		int i = 0;
-		while(i< result.length) {
+		while (i < result.length) {
 			result[i] = pq.remove().getKey();
 			i++;
 		}
@@ -283,7 +285,31 @@ public class MDS {
 	 * removed.
 	 */
 	public Long[] purge(float maxReputation) {
-		return null;
+		ArrayList<Long> itemsToBeRemoved = new ArrayList<>();
+		for (Map.Entry<Long, ItemDetails> item : itemMap.entrySet()) {
+			boolean remove = true;
+			ItemDetails itemDetails = item.getValue();
+			for (Map.Entry<Long, Integer> supPrice : itemDetails.priceMap.entrySet()) {
+				if (supplierMap.get(supPrice.getKey()) > maxReputation) {
+					remove = false;
+					break;
+				}
+			}
+			if (remove)
+				itemsToBeRemoved.add(item.getKey());
+		}
+		
+		for(Long item : itemsToBeRemoved) {
+			ItemDetails itemDetails = itemMap.remove(item);
+			for(Map.Entry<Long, Boolean> entry : itemDetails.descMap.entrySet()) {
+				desciptionItemMapping.get(entry.getKey()).remove(item);
+			}
+		}
+		
+		
+		Long[] result = new Long[itemsToBeRemoved.size()];
+		result = itemsToBeRemoved.toArray(result);
+		return result;
 	}
 
 	/*
@@ -292,11 +318,11 @@ public class MDS {
 	 */
 	public Long remove(Long id) {
 		ItemDetails itemDetails = itemMap.remove(id);
-		if(itemDetails == null)
+		if (itemDetails == null)
 			return 0L;
-		
+
 		Long result = 0L;
-		for(Long descId : itemDetails.descMap.keySet()) {
+		for (Long descId : itemDetails.descMap.keySet()) {
 			result += descId;
 			desciptionItemMapping.get(descId).remove(id);
 		}
@@ -312,8 +338,8 @@ public class MDS {
 	public int remove(Long id, Long[] arr) {
 		ItemDetails itemDetails = itemMap.get(id);
 		int count = 0;
-		for(Long desc : arr) {
-			if(itemDetails.descMap.remove(desc) != null) {
+		for (Long desc : arr) {
+			if (itemDetails.descMap.remove(desc) != null) {
 				desciptionItemMapping.get(desc).remove(id);
 				count++;
 			}
@@ -327,9 +353,9 @@ public class MDS {
 	 */
 	public int removeAll(Long[] arr) {
 		HashSet<Long> itemsModified = new HashSet<Long>();
-		for(Long desc : arr) {
+		for (Long desc : arr) {
 			HashSet<Long> itemsWithDesc = desciptionItemMapping.get(desc);
-			for(Long item : itemsWithDesc) {
+			for (Long item : itemsWithDesc) {
 				itemsModified.add(item);
 				ItemDetails itemDetails = itemMap.get(item);
 				itemDetails.descMap.remove(desc);
